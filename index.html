@@ -279,15 +279,20 @@ function parseCSV(text) {
 }
 
 function calcData(rows) {
-  const data = rows.slice(1).filter(r => r[2] && r[3]);
+  const data = rows.slice(1).filter(r => r.some(c => c && c.trim()));
+  console.log('Filas recibidas:', data.length);
+  if (data[0]) console.log('Ejemplo fila:', JSON.stringify(data[0]));
+
   return [1,2,3].map(idx => {
     const filas = data.filter(r => {
-      const esc = r[2].trim().replace('.0','').replace('Escenario ','').trim();
-      return esc === String(idx);
+      const raw = (r[2] || '').trim();
+      const clean = raw.toLowerCase().replace('escenario','').replace('.0','').trim();
+      return clean === String(idx);
     });
-    const vA = filas.filter(r => r[3].trim().toUpperCase()==='A').length;
-    const vB = filas.filter(r => r[3].trim().toUpperCase()==='B').length;
-    const vC = filas.filter(r => r[3].trim().toUpperCase()==='C').length;
+    console.log(`E${idx}: ${filas.length} resp`);
+    const vA = filas.filter(r => (r[3]||'').trim().toUpperCase()==='A').length;
+    const vB = filas.filter(r => (r[3]||'').trim().toUpperCase()==='B').length;
+    const vC = filas.filter(r => (r[3]||'').trim().toUpperCase()==='C').length;
     const total = vA+vB+vC;
     let mayoria = null;
     if (total > 0) {
