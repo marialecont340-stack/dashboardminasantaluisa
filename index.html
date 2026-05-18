@@ -315,7 +315,7 @@ function renderScenarios(scenData) {
   let totalAll = 0, totalB = 0, totalA = 0, totalC = 0;
   scenData.forEach(({vA,vB,vC,total}) => { totalAll+=total; totalA+=vA; totalB+=vB; totalC+=vC; });
 
-  document.getElementById('kpi-total').textContent = totalAll || '—';
+  document.title = `Simulación Experiencial — ${totalAll} participantes`;
 
   scenData.forEach(({idx, vA, vB, vC, total, mayoria}) => {
     const pct = v => total ? Math.round(v/total*100) : 0;
