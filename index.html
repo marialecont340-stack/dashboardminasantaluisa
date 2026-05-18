@@ -37,18 +37,27 @@
     .top-bar{
       display:flex;align-items:center;justify-content:space-between;
       padding:0.65rem 2rem;
-      background:rgba(4,13,26,0.85);
-      backdrop-filter:blur(10px);
+      background:#fff;
       border-bottom:3px solid var(--red);
       flex-wrap:wrap;gap:0.5rem;
     }
     .top-left{display:flex;align-items:center;gap:1rem;}
     .noatum-logo{height:40px;width:auto;object-fit:contain;}
-    .top-titles h1{font-size:clamp(0.9rem,1.8vw,1.35rem);font-weight:800;letter-spacing:0.02em;color:#fff;}
+    .top-titles h1{font-size:clamp(0.9rem,1.8vw,1.35rem);font-weight:800;letter-spacing:0.02em;color:#0a1628;}
     .top-titles p{font-size:clamp(0.55rem,0.9vw,0.75rem);color:var(--red);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
     .logos{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
-    .partner-logo{height:32px;width:auto;object-fit:contain;opacity:0.9;filter:brightness(0) invert(1);}
-    .partner-logo:hover{opacity:1;}
+    .logos{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;}
+    .partner-logo{height:28px;width:auto;object-fit:contain;}
+
+    /* ══ LOGO BAR ══ */
+    .logo-bar{
+      background:#fff;
+      padding:0.5rem 2rem;
+      display:flex;align-items:center;justify-content:center;
+      gap:2rem;
+      border-bottom:1px solid rgba(0,0,0,0.1);
+      flex-wrap:wrap;
+    }
 
     /* ══ QUOTE BAR ══ */
     .quote-bar{
@@ -184,9 +193,9 @@
     </div>
   </div>
   <div class="logos">
-    <img class="partner-logo" src="Logo%20angloamericano.png" alt="Anglo American"/>
-    <img class="partner-logo" src="Logo%20influye.png" alt="Influye"/>
-    <img class="partner-logo" src="Logo%20explayrience.png" alt="Explayrience"/>
+    <img class="partner-logo" src="Logo angloamericano.png" alt="Anglo American"/>
+    <img class="partner-logo" src="Logo influye.png" alt="Influye"/>
+    <img class="partner-logo" src="Logo explayrience.png" alt="Explayrience"/>
   </div>
 </div>
 
@@ -221,7 +230,7 @@ const REFRESH_MS = 30000;
 const charts = {};
 
 const SCENARIO_NAMES = { 1:'DESPACHO ATRASADO', 2:'GENTE EXPERIMENTADA', 3:'RESPETO DE JERARQUÍA' };
-const SCENARIO_IMAGES = { 1:'Escenario%201.png', 2:'Escenario%202.png', 3:'Escenario%203.png' };
+const SCENARIO_IMAGES = { 1:'Escenario 1.png', 2:'Escenario 2.png', 3:'Escenario 3.png' };
 
 const OPTIONS_TEXT = {
   1:{ A:'Avanzar rápidamente para evitar más retraso operacional.', B:'Detener el movimiento hasta asegurar completamente la segregación y el área.', C:'Mover solo parte de la carga mientras terminan de acondicionar la zona.' },
