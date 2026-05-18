@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simulación Experiencial — Noatum</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    :root{
+      --bg:#0b1628;
+      --card:#0e1f3a;
+      --card2:#122444;
+      --border:rgba(255,255,255,0.08);
+      --a:#f59e0b;
+      --b:#3b82f6;
+      --c:#10b981;
+      --teal:#06b6d4;
+      --red:#ef4444;
+      --text:rgba(255,255,255,0.88);
+      --muted:rgba(255,255,255,0.45);
+    }
+    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;padding:0 0 1.5rem;}
+
+    /* ══ HEADER ══ */
+    .top-bar{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0.75rem 2rem;
+      background:linear-gradient(90deg,#0a1628,#0d2040);
+      border-bottom:1px solid var(--border);
+      flex-wrap:wrap;gap:0.5rem;
+    }
+    .top-left h1{font-size:clamp(1rem,2vw,1.5rem);font-weight:800;letter-spacing:0.02em;color:#fff;}
+    .top-left p{font-size:clamp(0.6rem,1vw,0.8rem);color:var(--teal);font-weight:600;letter-spacing:0.06em;text-transform:uppercase;}
+    .logos{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;}
+    .logo-pill{
+      background:rgba(255,255,255,0.06);border:1px solid var(--border);
+      border-radius:8px;padding:0.3rem 0.8rem;
+      font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.7);
+      letter-spacing:0.04em;
+    }
+    .live-box{
+      background:#0f2d1a;border:1px solid #166534;border-radius:10px;
+      padding:0.4rem 0.9rem;text-align:center;min-width:100px;
+    }
+    .live-box .live-lbl{display:flex;align-items:center;gap:5px;font-size:0.65rem;font-weight:700;color:#4ade80;letter-spacing:0.08em;}
+    .live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 1.4s infinite;}
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+    .live-box .part-count{font-size:1.4rem;font-weight:800;color:#fff;line-height:1.1;}
+    .live-box .part-lbl{font-size:0.6rem;color:var(--muted);}
+
+    /* ══ QUOTE BAR ══ */
+    .quote-bar{
+      background:linear-gradient(90deg,#0d2040,#0e2850);
+      padding:0.55rem 2rem;
+      border-bottom:1px solid var(--border);
+      display:flex;align-items:center;gap:0.75rem;
+    }
+    .quote-bar .q-icon{font-size:1.2rem;color:var(--teal);opacity:0.7;}
+    .quote-bar p{font-size:clamp(0.7rem,1.2vw,0.88rem);color:rgba(255,255,255,0.65);font-style:italic;}
+
+    /* ══ MAIN GRID ══ */
+    .main{padding:1rem 1.5rem;display:flex;flex-direction:column;gap:1rem;}
+
+    .scenarios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+
+    /* ══ SCENARIO CARD ══ */
+    .sc-card{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+    }
+    .sc-img-area{
+      height:90px;position:relative;overflow:hidden;
+      background:linear-gradient(135deg,#1a3a5c,#0e2040);
+      display:flex;align-items:flex-end;
+    }
+    .sc-img-area img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.8;}
+    .sc-title-overlay{
+      position:absolute;bottom:0;left:0;right:0;
+      background:linear-gradient(transparent,rgba(0,0,0,0.75));
+      padding:0.4rem 0.75rem;
+    }
+    .sc-tag{font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:5px;}
+    .sc-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--teal);}
+    .sc-name{font-size:clamp(0.75rem,1.2vw,0.9rem);font-weight:800;color:#fff;line-height:1.1;}
+
+    .sc-body{padding:0.75rem;display:flex;flex-direction:column;gap:0.6rem;flex:1;}
+
+    /* Donut + legend */
+    .chart-row{display:flex;align-items:center;gap:0.75rem;}
+    .donut-wrap{position:relative;width:90px;height:90px;flex-shrink:0;}
+    .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+    .donut-center .pct-big{font-size:1.1rem;font-weight:800;color:#fff;line-height:1;}
+    .donut-center .pct-lbl{font-size:0.5rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;}
+    .legend{display:flex;flex-direction:column;gap:4px;flex:1;}
+    .leg-row{display:flex;align-items:center;justify-content:space-between;gap:4px;}
+    .leg-left{display:flex;align-items:center;gap:5px;font-size:0.68rem;}
+    .leg-sq{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+    .leg-val{font-size:0.68rem;font-weight:700;color:#fff;}
+    .leg-pct{font-size:0.62rem;color:var(--muted);}
+
+    /* Winning answer */
+    .winning-section{background:rgba(255,255,255,0.04);border-radius:10px;padding:0.5rem 0.65rem;}
+    .winning-lbl{font-size:0.58rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--teal);margin-bottom:0.3rem;}
+    .winning-row{display:flex;align-items:flex-start;gap:0.5rem;}
+    .winning-badge{
+      width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+      font-size:0.9rem;font-weight:800;flex-shrink:0;margin-top:1px;
+    }
+    .winning-text{font-size:clamp(0.6rem,0.9vw,0.72rem);line-height:1.4;color:rgba(255,255,255,0.85);}
+
+    /* Insight */
+    .insight-section{display:flex;align-items:flex-start;gap:0.5rem;}
+    .insight-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+    .insight-inner{}
+    .insight-lbl{font-size:0.55rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:#a78bfa;margin-bottom:2px;}
+    .insight-text{font-size:clamp(0.58rem,0.85vw,0.68rem);line-height:1.4;color:rgba(255,255,255,0.78);}
+
+    /* Factores */
+    .factores-section{}
+    .factores-lbl{font-size:0.55rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+    .factores-row{display:flex;gap:5px;flex-wrap:wrap;}
+    .factor-pill{
+      background:rgba(255,255,255,0.06);border:1px solid var(--border);
+      border-radius:20px;padding:2px 8px;
+      font-size:0.58rem;color:rgba(255,255,255,0.6);
+      display:flex;align-items:center;gap:3px;
+    }
+
+    /* Sin respuestas */
+    .no-data{text-align:center;padding:1.5rem;color:var(--muted);font-size:0.75rem;font-style:italic;}
+
+    /* ══ RESULTADOS CONSOLIDADOS ══ */
+    .consolidado{
+      background:var(--card);border:1px solid var(--border);border-radius:16px;
+      padding:1rem 1.25rem;
+    }
+    .consolidado-title{font-size:clamp(0.8rem,1.3vw,1rem);font-weight:800;color:#fff;margin-bottom:0.75rem;letter-spacing:0.03em;}
+    .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0.75rem;}
+    .kpi-card{
+      background:rgba(255,255,255,0.04);border:1px solid var(--border);
+      border-radius:12px;padding:0.65rem 0.75rem;
+    }
+    .kpi-icon{font-size:1.3rem;margin-bottom:3px;}
+    .kpi-pct{font-size:1.6rem;font-weight:800;line-height:1;}
+    .kpi-name{font-size:0.62rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-top:2px;}
+    .kpi-desc{font-size:0.58rem;color:var(--muted);line-height:1.3;margin-top:2px;}
+
+    /* ══ FOOTER ══ */
+    .foot{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:0.5rem 1.5rem 0;flex-wrap:wrap;gap:0.5rem;
+    }
+    .foot-left{display:flex;align-items:center;gap:6px;font-size:0.65rem;color:var(--muted);}
+    .foot-clock{font-size:0.65rem;color:var(--muted);}
+    .foot-hash{font-size:0.65rem;color:var(--teal);font-weight:600;}
+
+    /* ══ LOADING ══ */
+    .status-msg{text-align:center;padding:3rem;color:var(--muted);font-size:0.9rem;}
+
+    /* ══ RESPONSIVE ══ */
+    @media(max-width:900px){
+      .scenarios-grid{grid-template-columns:1fr;}
+      .kpi-grid{grid-template-columns:repeat(2,1fr);}
+      .top-bar{padding:0.75rem 1rem;}
+      .main{padding:0.75rem 1rem;}
+    }
+    @media(max-width:600px){
+      .logos{display:none;}
+      .kpi-grid{grid-template-columns:repeat(2,1fr);}
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="top-bar">
+  <div class="top-left">
+    <h1>SIMULACIÓN EXPERIENCIAL</h1>
+    <p>Decisiones bajo presión operacional</p>
+  </div>
+  <div class="logos">
+    <span class="logo-pill">noatum logistics</span>
+    <span class="logo-pill">Anglo American</span>
+    <span class="logo-pill">INFLUYE</span>
+    <span class="logo-pill">EXPLAYRIENCE</span>
+  </div>
+  <div class="live-box">
+    <div class="live-lbl"><span class="live-dot"></span>EN VIVO</div>
+    <div class="part-count" id="kpi-total">—</div>
+    <div class="part-lbl">Participantes conectados</div>
+  </div>
+</div>
+
+<!-- QUOTE -->
+<div class="quote-bar">
+  <span class="q-icon">❝</span>
+  <p>Las decisiones operacionales también construyen cultura.</p>
+</div>
+
+<div class="main">
+  <!-- ESCENARIOS -->
+  <div class="scenarios-grid" id="scenarios-grid">
+    <div class="status-msg" id="loading-msg">⏳ Conectando con los datos...</div>
+  </div>
+
+  <!-- CONSOLIDADO -->
+  <div class="consolidado" id="consolidado" style="display:none;">
+    <div class="consolidado-title">RESULTADOS CONSOLIDADOS</div>
+    <div class="kpi-grid" id="kpi-grid"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="foot">
+  <div class="foot-left">🕐 ACTUALIZADO EN TIEMPO REAL · <span id="last-update">—</span></div>
+  <div class="foot-hash">#DecisionesQueTransforman</div>
+</div>
+
+<script>
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vR6beUttk7b30ZQN5irmhdZf8Ag3coB0YBMdGmmuHJOYJv6EK7eNFNu9r0xFBxBysCZgfx_vzbNi0jS/pub?gid=628326535&single=true&output=csv';
+const REFRESH_MS = 30000;
+const charts = {};
+
+const SCENARIO_NAMES = { 1:'DESPACHO ATRASADO', 2:'GENTE EXPERIMENTADA', 3:'RESPETO DE JERARQUÍA' };
+const SCENARIO_IMAGES = { 1:'image/escenario1.png', 2:'image/escenario2.png', 3:'image/escenario3.png' };
+
+const OPTIONS_TEXT = {
+  1:{ A:'Avanzar rápidamente para evitar más retraso operacional.', B:'Detener el movimiento hasta asegurar completamente la segregación y el área.', C:'Mover solo parte de la carga mientras terminan de acondicionar la zona.' },
+  2:{ A:'Continuar la maniobra porque el personal tiene experiencia.', B:'Detener la actividad y retirar al personal expuesto de la línea de maniobra.', C:'Permitir terminar rápidamente para evitar retrasar la operación.' },
+  3:{ A:'Continuar la operación porque la solicitud viene directamente del cliente.', B:'Detener el inicio de la maniobra hasta completar las validaciones y autorizaciones.', C:'Avanzar parcialmente mientras se termina de regularizar la documentación.' }
+};
+
+const INSIGHTS = {
+  1:{ A:'⚠️ La mayoría priorizó recuperar el tiempo operacional aun con controles incompletos. La presión por cumplir puede desplazar decisiones preventivas y normalizar riesgos temporales.', B:'La mayoría priorizó asegurar completamente el área antes de continuar la maniobra. Esto refleja una cultura preventiva donde la intervención oportuna se mantiene incluso bajo presión operacional.', C:'La mayoría optó por una solución intermedia. Bajo presión, las operaciones tienden a negociar parcialmente el riesgo para evitar detener completamente la actividad.' },
+  2:{ A:'⚠️ La mayoría confió en la experiencia del equipo para continuar. La costumbre y la confianza operacional pueden disminuir la percepción real del riesgo.', B:'La mayoría priorizó intervenir antes de continuar. La experiencia no reemplaza los controles ni la percepción activa del riesgo.', C:'⚠️ La mayoría permitió continuar para no afectar la continuidad. Bajo rutinas conocidas, el riesgo puede normalizarse sin generar intervención inmediata.' },
+  3:{ A:'⚠️ La mayoría priorizó continuar por el nivel jerárquico de la solicitud. La presión operacional y la autoridad pueden influir en el cumplimiento de controles preventivos.', B:'La mayoría mantuvo el estándar preventivo antes de iniciar la maniobra. Los procedimientos se sostienen incluso bajo presión operacional o solicitudes jerárquicas.', C:'⚠️ La mayoría avanzó parcialmente para mantener la continuidad. Bajo presión jerárquica, las operaciones tienden a flexibilizar temporalmente los estándares preventivos.' }
+};
+
+const FACTORES = {
+  1:['⚡ Presión operacional','⚖️ Continuidad vs prevención','🧠 Toma de decisiones'],
+  2:['⚠️ Exceso de confianza','👁️ Normalización del riesgo','🔥 Línea de fuego'],
+  3:['👤 Autoridad operacional','🤝 Presión del cliente','🛡️ Liderazgo preventivo']
+};
+
+const OPTION_COLORS = { A:'#f59e0b', B:'#3b82f6', C:'#10b981' };
+
+function parseCSV(text) {
+  const rows = [];
+  for (const line of text.split('\n')) {
+    if (!line.trim()) continue;
+    const cols = []; let inQ = false, col = '';
+    for (let i = 0; i < line.length; i++) {
+      const ch = line[i];
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === ',' && !inQ) { cols.push(col.trim()); col = ''; }
+      else { col += ch; }
+    }
+    cols.push(col.trim());
+    rows.push(cols);
+  }
+  return rows;
+}
+
+function calcData(rows) {
+  const data = rows.slice(1).filter(r => r[2] && r[3]);
+  return [1,2,3].map(idx => {
+    const filas = data.filter(r => {
+      const esc = r[2].trim().replace('.0','').replace('Escenario ','').trim();
+      return esc === String(idx);
+    });
+    const vA = filas.filter(r => r[3].trim().toUpperCase()==='A').length;
+    const vB = filas.filter(r => r[3].trim().toUpperCase()==='B').length;
+    const vC = filas.filter(r => r[3].trim().toUpperCase()==='C').length;
+    const total = vA+vB+vC;
+    let mayoria = null;
+    if (total > 0) {
+      mayoria = 'A';
+      if (vB>=vA && vB>=vC) mayoria='B';
+      else if (vC>vA && vC>vB) mayoria='C';
+    }
+    return {idx, vA, vB, vC, total, mayoria};
+  });
+}
+
+function renderDonut(id, vA, vB, vC, total) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  if (charts[id]) { charts[id].destroy(); delete charts[id]; }
+  const hasData = total > 0;
+  charts[id] = new Chart(canvas.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['A','B','C'],
+      datasets:[{
+        data: hasData ? [vA,vB,vC] : [1,1,1],
+        backgroundColor: hasData ? ['#f59e0b','#3b82f6','#10b981'] : ['#1e2d4a','#1e2d4a','#1e2d4a'],
+        borderWidth: 0, hoverOffset: 4
+      }]
+    },
+    options: {
+      cutout:'68%', responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{display:false}, tooltip:{enabled:hasData} }
+    }
+  });
+}
+
+function renderScenarios(scenData) {
+  const grid = document.getElementById('scenarios-grid');
+  Object.keys(charts).forEach(id => { if(charts[id]){charts[id].destroy();delete charts[id];} });
+  grid.innerHTML = '';
+
+  let totalAll = 0, totalB = 0, totalA = 0, totalC = 0;
+  scenData.forEach(({vA,vB,vC,total}) => { totalAll+=total; totalA+=vA; totalB+=vB; totalC+=vC; });
+
+  document.getElementById('kpi-total').textContent = totalAll || '—';
+
+  scenData.forEach(({idx, vA, vB, vC, total, mayoria}) => {
+    const pct = v => total ? Math.round(v/total*100) : 0;
+    const chartId = `chart-${idx}`;
+    const mayorPct = mayoria ? pct(mayoria==='A'?vA:mayoria==='B'?vB:vC) : 0;
+    const winColor = mayoria ? OPTION_COLORS[mayoria] : '#666';
+    const hasData = total > 0;
+
+    const card = document.createElement('div');
+    card.className = 'sc-card';
+    card.innerHTML = `
+      <div class="sc-img-area">
+        <img src="${SCENARIO_IMAGES[idx]}" alt="Escenario ${idx}" onerror="this.style.display='none'"/>
+        <div class="sc-title-overlay">
+          <div class="sc-tag"><span class="sc-tag-dot"></span>ESCENARIO ${idx}</div>
+          <div class="sc-name">${SCENARIO_NAMES[idx]}</div>
+        </div>
+      </div>
+      <div class="sc-body">
+        ${hasData ? `
+        <div class="chart-row">
+          <div class="donut-wrap">
+            <canvas id="${chartId}" style="width:90px;height:90px;"></canvas>
+            <div class="donut-center">
+              <span class="pct-big" style="color:${winColor}">${mayorPct}%</span>
+              <span class="pct-lbl">opción ${mayoria}</span>
+            </div>
+          </div>
+          <div class="legend">
+            <div class="leg-row"><div class="leg-left"><span class="leg-sq" style="background:#f59e0b"></span>A</div><span class="leg-val">${vA}</span><span class="leg-pct">${pct(vA)}%</span></div>
+            <div class="leg-row"><div class="leg-left"><span class="leg-sq" style="background:#3b82f6"></span>B</div><span class="leg-val">${vB}</span><span class="leg-pct">${pct(vB)}%</span></div>
+            <div class="leg-row"><div class="leg-left"><span class="leg-sq" style="background:#10b981"></span>C</div><span class="leg-val">${vC}</span><span class="leg-pct">${pct(vC)}%</span></div>
+          </div>
+        </div>
+        <div class="winning-section">
+          <div class="winning-lbl">RESPUESTA MÁS VOTADA</div>
+          <div class="winning-row">
+            <div class="winning-badge" style="background:${winColor}22;color:${winColor};border:2px solid ${winColor}">${mayoria}</div>
+            <div class="winning-text">${OPTIONS_TEXT[idx][mayoria]}</div>
+          </div>
+        </div>
+        <div class="insight-section">
+          <span class="insight-icon">🧠</span>
+          <div class="insight-inner">
+            <div class="insight-lbl">INSIGHT IA</div>
+            <div class="insight-text">${INSIGHTS[idx][mayoria]}</div>
+          </div>
+        </div>
+        <div class="factores-section">
+          <div class="factores-lbl">FACTORES DETECTADOS</div>
+          <div class="factores-row">${FACTORES[idx].map(f=>`<span class="factor-pill">${f}</span>`).join('')}</div>
+        </div>
+        ` : `<div class="no-data">⏳ Sin respuestas aún...</div>`}
+      </div>`;
+    grid.appendChild(card);
+    if (hasData) renderDonut(chartId, vA, vB, vC, total);
+  });
+
+  // Consolidado
+  if (totalAll > 0) {
+    const con = document.getElementById('consolidado');
+    con.style.display = 'block';
+    const kpiGrid = document.getElementById('kpi-grid');
+    const prevPct = Math.round(totalB/totalAll*100);
+    const riskPct = Math.round(totalA/totalAll*100);
+    const intPct  = Math.round((totalB/(totalAll||1))*100);
+    const presPct = Math.round(((totalA+totalC)/(totalAll||1))*100);
+    kpiGrid.innerHTML = `
+      <div class="kpi-card">
+        <div class="kpi-icon">✅</div>
+        <div class="kpi-pct" style="color:#4ade80">${prevPct}%</div>
+        <div class="kpi-name" style="color:#4ade80">PREVENCIÓN</div>
+        <div class="kpi-desc">Decisiones orientadas a la seguridad</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⚠️</div>
+        <div class="kpi-pct" style="color:#f59e0b">${riskPct}%</div>
+        <div class="kpi-name" style="color:#f59e0b">TOLERANCIA AL RIESGO</div>
+        <div class="kpi-desc">Decisiones que aceptan riesgos bajo presión</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">🎯</div>
+        <div class="kpi-pct" style="color:#06b6d4">${intPct}%</div>
+        <div class="kpi-name" style="color:#06b6d4">INTERVENCIÓN OPORTUNA</div>
+        <div class="kpi-desc">Decisiones que detienen o corrigen a tiempo</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⚡</div>
+        <div class="kpi-pct" style="color:#a78bfa">${presPct}%</div>
+        <div class="kpi-name" style="color:#a78bfa">PRESIÓN OPERACIONAL</div>
+        <div class="kpi-desc">Decisiones influenciadas por tiempo o jerarquía</div>
+      </div>`;
+  }
+
+  document.getElementById('last-update').textContent = new Date().toLocaleTimeString('es-PE');
+}
+
+async function loadData() {
+  try {
+    const res = await fetch(SHEET_URL + '&t=' + Date.now());
+    const text = await res.text();
+    renderScenarios(calcData(parseCSV(text)));
+  } catch(err) {
+    const msg = document.getElementById('loading-msg');
+    if (msg) msg.textContent = '❌ Error al conectar con Google Sheets.';
+  }
+}
+
+loadData();
+setInterval(loadData, REFRESH_MS);
+</script>
+</body>
+</html>
