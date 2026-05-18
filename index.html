@@ -387,10 +387,6 @@ function renderScenarios(scenData) {
             <div class="insight-text">${INSIGHTS[idx][mayoria]}</div>
           </div>
         </div>
-        <div class="factores-section">
-          <div class="factores-lbl">FACTORES DETECTADOS</div>
-          <div class="factores-row">${FACTORES[idx].map(f=>`<span class="factor-pill">${f}</span>`).join('')}</div>
-        </div>
         ` : `<div class="no-data">⏳ Sin respuestas aún...</div>`}
       </div>`;
     grid.appendChild(card);
