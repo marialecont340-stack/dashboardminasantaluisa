@@ -8,48 +8,51 @@
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     :root{
-      --bg:#05101f;
-      --card:#091525;
-      --card2:#0d1e30;
+      --bg:#040d1a;
+      --card:rgba(8,20,40,0.92);
       --border:rgba(255,255,255,0.1);
       --red:#C8102E;
-      --blue:#1e40af;
+      --blue:#1e3a8a;
       --blue-light:#3b82f6;
-      --a:#f59e0b;
-      --b:#3b82f6;
-      --c:#10b981;
+      --a:#f59e0b;--b:#3b82f6;--c:#10b981;
       --teal:#3b82f6;
       --text:rgba(255,255,255,0.92);
       --muted:rgba(255,255,255,0.45);
     }
-    body{background:var(--bg);color:var(--text);font-family:'Segoe UI',Arial,sans-serif;min-height:100vh;padding:0 0 1.5rem;}
+
+    body {
+      color:var(--text);
+      font-family:'Segoe UI',Arial,sans-serif;
+      min-height:100vh;
+      padding:0 0 1.5rem;
+      background-color: #040d1a;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 0% 0%, rgba(200,16,46,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(30,58,138,0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 30% at 100% 0%, rgba(200,16,46,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 40% at 0% 100%, rgba(30,58,138,0.15) 0%, transparent 50%);
+    }
 
     /* ══ HEADER ══ */
     .top-bar{
       display:flex;align-items:center;justify-content:space-between;
-      padding:0.75rem 2rem;
-      background:linear-gradient(90deg,#0a0f1e,#0d1835);
+      padding:0.65rem 2rem;
+      background:rgba(4,13,26,0.85);
+      backdrop-filter:blur(10px);
       border-bottom:3px solid var(--red);
       flex-wrap:wrap;gap:0.5rem;
     }
-    .top-left h1{font-size:clamp(1rem,2vw,1.5rem);font-weight:800;letter-spacing:0.02em;color:#fff;}
-    .top-left p{font-size:clamp(0.6rem,1vw,0.8rem);color:var(--red);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
-    .logos{display:flex;align-items:center;gap:1.2rem;flex-wrap:wrap;}
+    .top-left{display:flex;align-items:center;gap:1rem;}
+    .noatum-logo{height:40px;width:auto;object-fit:contain;}
+    .top-titles h1{font-size:clamp(0.9rem,1.8vw,1.35rem);font-weight:800;letter-spacing:0.02em;color:#fff;}
+    .top-titles p{font-size:clamp(0.55rem,0.9vw,0.75rem);color:var(--red);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+    .logos{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
     .logo-pill{
       background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.15);
       border-radius:8px;padding:0.3rem 0.8rem;
-      font-size:0.7rem;font-weight:700;color:rgba(255,255,255,0.85);
+      font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.85);
       letter-spacing:0.04em;
     }
-    .live-box{
-      background:rgba(200,16,46,0.15);border:1px solid var(--red);border-radius:10px;
-      padding:0.4rem 0.9rem;text-align:center;min-width:100px;
-    }
-    .live-box .live-lbl{display:flex;align-items:center;gap:5px;font-size:0.65rem;font-weight:700;color:var(--red);letter-spacing:0.08em;}
-    .live-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:pulse 1.4s infinite;}
-    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-    .live-box .part-count{font-size:1.4rem;font-weight:800;color:#fff;line-height:1.1;}
-    .live-box .part-lbl{font-size:0.6rem;color:var(--muted);}
 
     /* ══ QUOTE BAR ══ */
     .quote-bar{
@@ -178,19 +181,16 @@
 <!-- HEADER -->
 <div class="top-bar">
   <div class="top-left">
-    <h1>SIMULACIÓN EXPERIENCIAL</h1>
-    <p>Decisiones bajo presión operacional</p>
+    <img class="noatum-logo" src="Logo_WSP_Noatum.png" alt="Noatum Logistics"/>
+    <div class="top-titles">
+      <h1>SIMULACIÓN EXPERIENCIAL</h1>
+      <p>Decisiones bajo presión operacional</p>
+    </div>
   </div>
   <div class="logos">
-    <span class="logo-pill">noatum logistics</span>
     <span class="logo-pill">Anglo American</span>
     <span class="logo-pill">INFLUYE</span>
     <span class="logo-pill">EXPLAYRIENCE</span>
-  </div>
-  <div class="live-box">
-    <div class="live-lbl"><span class="live-dot"></span>EN VIVO</div>
-    <div class="part-count" id="kpi-total">—</div>
-    <div class="part-lbl">Participantes conectados</div>
   </div>
 </div>
 
