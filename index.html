@@ -108,12 +108,12 @@
     .donut-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
     .donut-center .pct-big{font-size:1.1rem;font-weight:800;color:#0f172a;line-height:1;}
     .donut-center .pct-lbl{font-size:0.5rem;color:#475569;text-transform:uppercase;letter-spacing:0.06em;}
-    .legend{display:flex;flex-direction:column;gap:4px;flex:1;}
-    .leg-row{display:flex;align-items:center;justify-content:space-between;gap:4px;}
-    .leg-left{display:flex;align-items:center;gap:5px;font-size:0.68rem;}
+    .legend{display:flex;flex-direction:column;gap:5px;flex:1;}
+    .leg-row{display:flex;align-items:center;gap:6px;}
+    .leg-left{display:flex;align-items:center;gap:5px;font-size:0.68rem;font-weight:700;color:var(--text);min-width:22px;}
     .leg-sq{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-    .leg-val{font-size:0.68rem;font-weight:700;color:#fff;}
-    .leg-pct{font-size:0.62rem;color:#64748b;}
+    .leg-bar-wrap{flex:1;height:7px;background:#e2e8f0;border-radius:4px;overflow:hidden;} .leg-bar{height:100%;border-radius:4px;transition:width 0.6s ease;} .leg-val{font-size:0.68rem;font-weight:700;color:var(--text);}
+    .leg-pct{font-size:0.65rem;color:var(--muted);min-width:30px;text-align:right;}
 
     /* Winning answer */
     .winning-section{background:#eff6ff;border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:0.5rem 0.65rem;}
@@ -356,9 +356,21 @@ function renderScenarios(scenData) {
             </div>
           </div>
           <div class="legend">
-            <div class="leg-row"><div class="leg-left"><span class="leg-sq" style="background:#C8102E"></span>A</div><span class="leg-val">${vA}</span><span class="leg-pct">${pct(vA)}%</span></div>
-            <div class="leg-row"><div class="leg-left"><span class="leg-sq" style="background:#1e3a8a"></span>B</div><span class="leg-val">${vB}</span><span class="leg-pct">${pct(vB)}%</span></div>
-            <div class="leg-row"><div class="leg-left"><span class="leg-sq" style="background:#93b4e8"></span>C</div><span class="leg-val">${vC}</span><span class="leg-pct">${pct(vC)}%</span></div>
+            <div class="leg-row">
+              <div class="leg-left"><span class="leg-sq" style="background:#C8102E"></span>A</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vA)}%;background:#C8102E"></div></div>
+              <span class="leg-pct">${pct(vA)}%</span>
+            </div>
+            <div class="leg-row">
+              <div class="leg-left"><span class="leg-sq" style="background:#1e3a8a"></span>B</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vB)}%;background:#1e3a8a"></div></div>
+              <span class="leg-pct">${pct(vB)}%</span>
+            </div>
+            <div class="leg-row">
+              <div class="leg-left"><span class="leg-sq" style="background:#93b4e8"></span>C</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#93b4e8"></div></div>
+              <span class="leg-pct">${pct(vC)}%</span>
+            </div>
           </div>
         </div>
         <div class="winning-section">
