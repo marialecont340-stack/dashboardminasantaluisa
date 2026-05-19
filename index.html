@@ -329,7 +329,7 @@ function renderDonut(id, vA, vB, vC, total) {
       labels: ['A','B','C'],
       datasets:[{
         data: hasData ? [vA,vB,vC] : [1,1,1],
-        backgroundColor: hasData ? ['#C8102E','#1e3a8a','#f97316'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
+        backgroundColor: hasData ? ['#C8102E','#1e3a8a','#2e7d32'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
         borderWidth: 0, hoverOffset: 4
       }]
     },
@@ -389,8 +389,8 @@ function renderScenarios(scenData) {
               <span class="leg-pct">${pct(vB)}%</span>
             </div>
             <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#f97316"></span>C</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#f97316"></div></div>
+              <div class="leg-left"><span class="leg-sq" style="background:#2e7d32"></span>C</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#2e7d32"></div></div>
               <span class="leg-pct">${pct(vC)}%</span>
             </div>
           </div>
