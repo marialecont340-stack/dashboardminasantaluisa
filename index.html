@@ -88,7 +88,24 @@
     .scenarios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
 
     /* ══ SCENARIO CARD ══ */
-    .sc-card{
+    .sc-wrapper{ display:flex; flex-direction:column; gap:0; }
+    .sc-header-ext{
+      padding:0.5rem 0.75rem 0.4rem;
+      background:linear-gradient(135deg, rgba(200,16,46,0.92), rgba(200,16,46,0.7));
+      border-radius:12px 12px 0 0;
+      display:flex; align-items:center; gap:0.6rem;
+    }
+    .sc-tag-ext{
+      font-size:0.6rem; font-weight:800; letter-spacing:0.12em;
+      text-transform:uppercase; color:rgba(255,255,255,0.75);
+      background:rgba(255,255,255,0.15); border-radius:20px;
+      padding:2px 8px;
+    }
+    .sc-name-ext{
+      font-size:clamp(0.8rem,1.2vw,0.95rem);
+      font-weight:800; color:#fff;
+    }
+    .sc-card{ border-radius:0 0 14px 14px !important; }
       background:#ffffff;border:1px solid rgba(30,58,138,0.12);
       border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
     }
@@ -210,12 +227,6 @@
     <img class="partner-logo" src="Logo_influye.png" alt="Influye" onerror="this.style.display='none'"/>
     <img class="partner-logo" src="Logo_explayrience.png" alt="Explayrience" onerror="this.style.display='none'"/>
   </div>
-</div>
-
-<!-- QUOTE -->
-<div class="quote-bar">
-  <span class="q-icon">❝</span>
-  <p>Las decisiones operacionales también construyen cultura.</p>
 </div>
 
 <div class="main">
@@ -342,15 +353,15 @@ function renderScenarios(scenData) {
     const winColor = mayoria ? OPTION_COLORS[mayoria] : '#666';
     const hasData = total > 0;
 
+    const wrapper = document.createElement('div');
+    wrapper.className = 'sc-wrapper';
+    wrapper.innerHTML = `<div class="sc-header-ext"><span class="sc-tag-ext">ESCENARIO ${idx}</span><span class="sc-name-ext">${SCENARIO_NAMES[idx]}</span></div>`;
+
     const card = document.createElement('div');
     card.className = 'sc-card';
     card.innerHTML = `
       <div class="sc-img-area">
         <img src="${SCENARIO_IMAGES[idx]}" alt="Escenario ${idx}" onerror="this.style.display='none'"/>
-        <div class="sc-title-overlay">
-          <div class="sc-tag"><span class="sc-tag-dot"></span>ESCENARIO ${idx}</div>
-          <div class="sc-name">${SCENARIO_NAMES[idx]}</div>
-        </div>
       </div>
       <div class="sc-body">
         ${hasData ? `
@@ -380,13 +391,6 @@ function renderScenarios(scenData) {
             </div>
           </div>
         </div>
-        <div class="winning-section">
-          <div class="winning-lbl">RESPUESTA MÁS VOTADA</div>
-          <div class="winning-row">
-            <div class="winning-badge" style="background:${winColor}22;color:${winColor};border:2px solid ${winColor}">${mayoria}</div>
-            <div class="winning-text">${OPTIONS_TEXT[idx][mayoria]}</div>
-          </div>
-        </div>
         <div class="insight-section">
           <span class="insight-icon">🧠</span>
           <div class="insight-inner">
@@ -396,7 +400,8 @@ function renderScenarios(scenData) {
         </div>
         ` : `<div class="no-data">⏳ Sin respuestas aún...</div>`}
       </div>`;
-    grid.appendChild(card);
+    wrapper.appendChild(card);
+    grid.appendChild(wrapper);
     if (hasData) renderDonut(chartId, vA, vB, vC, total);
   });
 
