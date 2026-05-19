@@ -412,41 +412,56 @@ function renderScenarios(scenData) {
     const con = document.getElementById('consolidado');
     con.style.display = 'block';
     const kpiGrid = document.getElementById('kpi-grid');
-    const prevPct = Math.round(totalB/totalAll*100);
-    const riskPct = Math.round(totalA/totalAll*100);
-    const intPct  = Math.round((totalB/(totalAll||1))*100);
-    const presPct = Math.round(((totalA+totalC)/(totalAll||1))*100);
+
+    // Obtener datos individuales por escenario
+    const e1 = scenData.find(s => s.idx === 1);
+    const e2 = scenData.find(s => s.idx === 2);
+    const e3 = scenData.find(s => s.idx === 3);
+
+    // 1. CULTURA PREVENTIVA: % B en todos los escenarios
+    const cultPct = Math.round(totalB / totalAll * 100);
+
+    // 2. PRESIÓN OPERACIONAL: % A en E1 + E3 (escenarios de presión explícita)
+    const presTotal = (e1?.total||0) + (e3?.total||0);
+    const presPct = presTotal ? Math.round(((e1?.vA||0) + (e3?.vA||0)) / presTotal * 100) : 0;
+
+    // 3. NORMALIZACIÓN DEL RIESGO: % A+C en E2 (personal expuesto)
+    const normPct = (e2?.total||0) ? Math.round(((e2?.vA||0) + (e2?.vC||0)) / e2.total * 100) : 0;
+
+    // 4. CRITERIO BAJO JERARQUÍA: % B en E3 (presión directa del cliente)
+    const critPct = (e3?.total||0) ? Math.round((e3?.vB||0) / e3.total * 100) : 0;
+
     kpiGrid.innerHTML = `
       <div class="kpi-card">
-        <div class="kpi-icon">✅</div>
+        <div class="kpi-icon">🛡️</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--blue)">${prevPct}%</div>
-          <div class="kpi-name" style="color:var(--blue)">PREVENCIÓN</div>
-          <div class="kpi-desc">Decisiones orientadas a la seguridad</div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">⚠️</div>
-        <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--red)">${riskPct}%</div>
-          <div class="kpi-name" style="color:var(--red)">TOLERANCIA AL RIESGO</div>
-          <div class="kpi-desc">Decisiones que aceptan riesgos bajo presión</div>
-        </div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-icon">🎯</div>
-        <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--blue)">${intPct}%</div>
-          <div class="kpi-name" style="color:var(--blue)">INTERVENCIÓN OPORTUNA</div>
-          <div class="kpi-desc">Decisiones que detienen o corrigen a tiempo</div>
+          <div class="kpi-pct" style="color:var(--blue)">${cultPct}%</div>
+          <div class="kpi-name" style="color:var(--blue)">CULTURA PREVENTIVA</div>
+          <div class="kpi-desc">Decisiones que priorizaron detener y asegurar</div>
         </div>
       </div>
       <div class="kpi-card">
         <div class="kpi-icon">⚡</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--blue-light)">${presPct}%</div>
+          <div class="kpi-pct" style="color:var(--red)">${presPct}%</div>
           <div class="kpi-name" style="color:var(--red)">PRESIÓN OPERACIONAL</div>
-          <div class="kpi-desc">Decisiones influenciadas por tiempo o jerarquía</div>
+          <div class="kpi-desc">Cedieron ante presión de supervisor o tiempo (E1 y E3)</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">👁️</div>
+        <div class="kpi-right">
+          <div class="kpi-pct" style="color:#f97316">${normPct}%</div>
+          <div class="kpi-name" style="color:#f97316">NORMALIZACIÓN DEL RIESGO</div>
+          <div class="kpi-desc">Continuaron con personal expuesto bajo carga (E2)</div>
+        </div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-icon">⚖️</div>
+        <div class="kpi-right">
+          <div class="kpi-pct" style="color:var(--blue)">${critPct}%</div>
+          <div class="kpi-name" style="color:var(--blue)">CRITERIO BAJO JERARQUÍA</div>
+          <div class="kpi-desc">Sostuvieron el protocolo ante presión del cliente (E3)</div>
         </div>
       </div>`;
   }
