@@ -300,7 +300,8 @@ function parseCSV(text) {
 function calcData(rows) {
   // Estructura: Telefono | Nombre | RespE1 | RespE2 | RespE3 | Fecha
   const data = rows.slice(1).filter(r => r[2] && r[2].trim());
-  console.log('Filas:', data.length);
+  console.log('Total filas:', data.length);
+  data.forEach((r,i) => console.log(`Fila ${i+1}:`, JSON.stringify(r)));
 
   return [1,2,3].map(idx => {
     const col = idx + 1; // E1=col2, E2=col3, E3=col4
