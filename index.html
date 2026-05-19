@@ -469,15 +469,34 @@ function renderScenarios(scenData) {
   
 }
 
-async function loadData() {
-  try {
-    const res = await fetch(SHEET_URL + '&t=' + Date.now());
-    const text = await res.text();
-    renderScenarios(calcData(parseCSV(text)));
-  } catch(err) {
-    const msg = document.getElementById('loading-msg');
-    if (msg) msg.textContent = '❌ Error al conectar con Google Sheets.';
-  }
+function loadData() {
+  return new Promise((resolve) => {
+    const cbName = 'cb_' + Date.now();
+    const script = document.createElement('script');
+    script.src = SHEET_URL + '?callback=' + cbName + '&t=' + Date.now();
+
+    window[cbName] = function(csvText) {
+      delete window[cbName];
+      document.head.removeChild(script);
+      try {
+        renderScenarios(calcData(parseCSV(csvText)));
+      } catch(e) {
+        const msg = document.getElementById('loading-msg');
+        if (msg) msg.textContent = '❌ Error al procesar los datos.';
+      }
+      resolve();
+    };
+
+    script.onerror = function() {
+      delete window[cbName];
+      if (document.head.contains(script)) document.head.removeChild(script);
+      const msg = document.getElementById('loading-msg');
+      if (msg) msg.textContent = '❌ Error al conectar con Google Sheets.';
+      resolve();
+    };
+
+    document.head.appendChild(script);
+  });
 }
 
 loadData();
