@@ -91,19 +91,21 @@
     .sc-wrapper{ display:flex; flex-direction:column; gap:0; }
     .sc-header-ext{
       padding:0.5rem 0.75rem 0.4rem;
-      background:linear-gradient(135deg, rgba(200,16,46,0.92), rgba(200,16,46,0.7));
+      background:#ffffff;
       border-radius:12px 12px 0 0;
+      border:1px solid rgba(30,58,138,0.12);
+      border-bottom:none;
       display:flex; align-items:center; gap:0.6rem;
     }
     .sc-tag-ext{
       font-size:0.6rem; font-weight:800; letter-spacing:0.12em;
-      text-transform:uppercase; color:rgba(255,255,255,0.75);
-      background:rgba(255,255,255,0.15); border-radius:20px;
-      padding:2px 8px;
+      text-transform:uppercase; color:#fff;
+      background:var(--red); border-radius:20px;
+      padding:2px 8px; flex-shrink:0;
     }
     .sc-name-ext{
       font-size:clamp(0.8rem,1.2vw,0.95rem);
-      font-weight:800; color:#fff;
+      font-weight:800; color:var(--blue);
     }
     .sc-card{ border-radius:0 0 14px 14px !important; }
       background:#ffffff;border:1px solid rgba(30,58,138,0.12);
@@ -150,11 +152,11 @@
     .winning-text{font-size:clamp(0.6rem,0.9vw,0.72rem);line-height:1.4;color:#1e293b;}
 
     /* Insight */
-    .insight-section{display:flex;align-items:flex-start;gap:0.5rem;background:#fff5f5;border-left:2px solid var(--red);border-radius:0 8px 8px 0;padding:0.4rem 0.6rem;}
-    .insight-icon{font-size:1.1rem;flex-shrink:0;margin-top:1px;}
+    .insight-section{display:flex;align-items:flex-start;gap:0.6rem;background:#fff0f0;border-left:4px solid var(--red);border-radius:0 10px 10px 0;padding:0.65rem 0.85rem;box-shadow:0 1px 4px rgba(200,16,46,0.08);}
+    .insight-icon{font-size:1.4rem;flex-shrink:0;margin-top:2px;}
     .insight-inner{}
-    .insight-lbl{font-size:0.55rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:2px;}
-    .insight-text{font-size:clamp(0.58rem,0.85vw,0.68rem);line-height:1.4;color:#334155;}
+    .insight-lbl{font-size:0.62rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:4px;}
+    .insight-text{font-size:clamp(0.68rem,0.95vw,0.8rem);line-height:1.5;color:#0f172a;font-weight:500;}
 
     /* Factores */
     .factores-section{}
