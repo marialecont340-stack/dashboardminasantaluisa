@@ -329,7 +329,7 @@ function renderDonut(id, vA, vB, vC, total) {
       labels: ['A','B','C'],
       datasets:[{
         data: hasData ? [vA,vB,vC] : [1,1,1],
-        backgroundColor: hasData ? ['#C8102E','#1e3a8a','#93b4e8'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
+        backgroundColor: hasData ? ['#C8102E','#1e3a8a','#f97316'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
         borderWidth: 0, hoverOffset: 4
       }]
     },
@@ -359,7 +359,7 @@ function renderScenarios(scenData) {
 
     const wrapper = document.createElement('div');
     wrapper.className = 'sc-wrapper';
-    wrapper.innerHTML = `<div class="sc-header-ext"><span class="sc-tag-ext">ESCENARIO ${idx}</span><span class="sc-name-ext">${SCENARIO_NAMES[idx]}</span></div>`;
+    wrapper.innerHTML = `<div class="sc-header-ext"><span class="sc-tag-ext">SIMULACIÓN ${idx}</span><span class="sc-name-ext">${SCENARIO_NAMES[idx]}</span></div>`;
 
     const card = document.createElement('div');
     card.className = 'sc-card';
@@ -389,8 +389,8 @@ function renderScenarios(scenData) {
               <span class="leg-pct">${pct(vB)}%</span>
             </div>
             <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#93b4e8"></span>C</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#93b4e8"></div></div>
+              <div class="leg-left"><span class="leg-sq" style="background:#f97316"></span>C</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#f97316"></div></div>
               <span class="leg-pct">${pct(vC)}%</span>
             </div>
           </div>
