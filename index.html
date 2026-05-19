@@ -496,11 +496,24 @@ function loadData() {
     };
 
     document.head.appendChild(script);
+
+    // Timeout de seguridad: si en 10s no responde, reintenta
+    setTimeout(() => {
+      if (window[cbName]) {
+        delete window[cbName];
+        if (document.head.contains(script)) document.head.removeChild(script);
+        resolve();
+      }
+    }, 10000);
   });
 }
 
-loadData();
-setInterval(loadData, REFRESH_MS);
+async function loop() {
+  await loadData();
+  setTimeout(loop, 15000);
+}
+
+loop();
 </script>
 </body>
 </html>
