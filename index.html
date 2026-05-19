@@ -42,6 +42,12 @@
     .top-titles p{font-size:clamp(0.65rem,1vw,0.9rem);color:var(--red);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
     .logos{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
     .partner-logo--aa{ background:#1a1a2e; min-width:150px; height:52px; }
+    .partner-logo--exp{
+      overflow:hidden;
+      transform:scale(1.6);
+      transform-origin:center;
+    }
+    .partner-logo--influye{ /* referencia, sin cambios */ }
     .logo-fallback{
       display:none;align-items:center;justify-content:center;
       height:56px;padding:6px 16px;
@@ -50,13 +56,11 @@
       border-radius:6px;white-space:nowrap;
     }
     .partner-logo{
-      height:56px;
-      width:auto;
-      max-width:200px;
-      min-width:100px;
+      height:52px;
+      width:120px;
       object-fit:contain;
       display:block;
-      padding:5px 10px;
+      padding:4px 8px;
       background:#f8fafc;
       border:1px solid rgba(30,58,138,0.1);
       border-radius:6px;
@@ -228,8 +232,8 @@
   </div>
   <div class="logos">
     <img class="partner-logo partner-logo--aa" src="Logo_angloamerican.png" alt="Anglo American" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><span class="logo-fallback">Anglo American</span>
-    <img class="partner-logo" src="Logo_influye.png" alt="Influye" onerror="this.style.display='none'"/>
-    <img class="partner-logo" src="Logo_explayrience.png" alt="Explayrience" onerror="this.style.display='none'"/>
+    <img class="partner-logo partner-logo--influye" src="Logo_influye.png" alt="Influye" onerror="this.style.display='none'"/>
+    <img class="partner-logo partner-logo--exp" src="Logo_explayrience.png" alt="Explayrience" onerror="this.style.display='none'"/>
   </div>
 </div>
 
@@ -278,7 +282,7 @@ const FACTORES = {
   3:['👤 Autoridad operacional','🤝 Presión del cliente','🛡️ Liderazgo preventivo']
 };
 
-const OPTION_COLORS = { A:"#C8102E", B:"#1e3a8a", C:"#795548" };
+const OPTION_COLORS = { A:"#C8102E", B:"#1e3a8a", C:"#f97316" };
 
 function parseCSV(text) {
   const rows = [];
@@ -330,7 +334,7 @@ function renderDonut(id, vA, vB, vC, total) {
       labels: ['A','B','C'],
       datasets:[{
         data: hasData ? [vA,vB,vC] : [1,1,1],
-        backgroundColor: hasData ? ['#C8102E','#1e3a8a','#795548'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
+        backgroundColor: hasData ? ['#C8102E','#1e3a8a','#f97316'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
         borderWidth: 0, hoverOffset: 4
       }]
     },
@@ -390,8 +394,8 @@ function renderScenarios(scenData) {
               <span class="leg-pct">${pct(vB)}%</span>
             </div>
             <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#795548"></span>C</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#795548"></div></div>
+              <div class="leg-left"><span class="leg-sq" style="background:#f97316"></span>C</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#f97316"></div></div>
               <span class="leg-pct">${pct(vC)}%</span>
             </div>
           </div>
