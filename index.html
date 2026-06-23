@@ -107,9 +107,9 @@
       font-size:clamp(0.8rem,1.2vw,0.95rem);
       font-weight:800; color:var(--blue);
     }
-    .sc-card{ border-radius:0 0 14px 14px !important; }
+    .sc-card{
       background:#ffffff;border:1px solid rgba(30,58,138,0.12);
-      border-radius:16px;overflow:hidden;display:flex;flex-direction:column;
+      border-radius:0 0 14px 14px;overflow:hidden;display:flex;flex-direction:column;
     }
     .sc-img-area{
       height:110px;position:relative;overflow:hidden;
@@ -258,14 +258,18 @@ const charts = {};
 
 // ════════════════════════════════════════════════════════════════════
 // Contenido de "Liderar con Respeto" — simulación de prevención del
-// hostigamiento. Los INSIGHTS fueron redactados a partir del documento
-// de la dinámica; revísalos y ajústalos con tu equipo si algo no calza.
+// hostigamiento.
+//
+// Los INSIGHTS de aquí abajo son el RESPALDO: el dashboard primero busca
+// el texto en la pestaña "Insights" del Sheet (cruzando por Momento +
+// Opción). Si esa pestaña no responde o le falta alguna fila, usa estos.
+// Edita el contenido real directamente en el Sheet, no aquí.
 // ════════════════════════════════════════════════════════════════════
 const SCENARIO_NAMES = { 1:'EL COMENTARIO INICIAL', 2:'INSISTENCIA REPETIDA', 3:'MENSAJES FUERA DE HORARIO' };
 
 // Pon aquí el nombre del archivo de cada imagen (ej: 'Momento 1.png').
 // Súbelas a la raíz del repo con esos mismos nombres.
-const SCENARIO_IMAGES = { 1:'Momento 1.png', 2:'Momento 2.png', 3:'Momento 3.png' };
+const SCENARIO_IMAGES = { 1:'Escenario_1_Santa_Luisa.png', 2:'Escenario_2_Santa_Luisa.png', 3:'Escenario_3_Santa_Luisa.png' };
 
 const OPTIONS_TEXT = {
   1:{ A:'Es un comentario normal.', B:'Puede resultar incómodo para algunas personas.', C:'Constituye claramente hostigamiento sexual.', D:'No estoy seguro.' },
@@ -364,7 +368,8 @@ function renderDonut(id, vA, vB, vC, vD, total) {
   });
 }
 
-function renderScenarios(scenData) {
+function renderScenarios(scenData, sheetInsights) {
+  sheetInsights = sheetInsights || {};
   const grid = document.getElementById('scenarios-grid');
   Object.keys(charts).forEach(id => { if(charts[id]){charts[id].destroy();delete charts[id];} });
   grid.innerHTML = '';
@@ -418,7 +423,7 @@ function renderScenarios(scenData) {
           <span class="insight-icon">💬</span>
           <div class="insight-inner">
             <div class="insight-lbl">INSIGHT IA</div>
-            <div class="insight-text">${INSIGHTS[idx][mayoria]}</div>
+            <div class="insight-text">${(sheetInsights[idx] && sheetInsights[idx][mayoria]) || INSIGHTS[idx][mayoria]}</div>
           </div>
         </div>
         ` : `<div class="no-data">⏳ Sin respuestas aún...</div>`}
@@ -477,43 +482,55 @@ function renderScenarios(scenData) {
   }
 }
 
-function loadData() {
+// Pide una pestaña del Sheet (vía Apps Script + JSONP) y devuelve su CSV
+// como texto. Si falla o tarda más de 10s, devuelve null (no rompe nada).
+function fetchSheetTab(nombrePestaña) {
   return new Promise((resolve) => {
-    const cbName = 'cb_' + Date.now();
+    const cbName = 'cb_' + nombrePestaña.replace(/\s+/g,'_') + '_' + Date.now();
     const script = document.createElement('script');
-    script.src = SHEET_URL + '?callback=' + cbName + '&t=' + Date.now();
+    script.src = SHEET_URL + '?sheet=' + encodeURIComponent(nombrePestaña) + '&callback=' + cbName + '&t=' + Date.now();
 
-    window[cbName] = function(csvText) {
-      delete window[cbName];
-      document.head.removeChild(script);
-      try {
-        renderScenarios(calcData(parseCSV(csvText)));
-      } catch(e) {
-        const msg = document.getElementById('loading-msg');
-        if (msg) msg.textContent = '❌ Error al procesar los datos.';
-      }
-      resolve();
-    };
+    const cleanup = () => { delete window[cbName]; if (document.head.contains(script)) document.head.removeChild(script); };
 
-    script.onerror = function() {
-      delete window[cbName];
-      if (document.head.contains(script)) document.head.removeChild(script);
-      const msg = document.getElementById('loading-msg');
-      if (msg) msg.textContent = '❌ Error al conectar con Google Sheets.';
-      resolve();
-    };
-
+    window[cbName] = function(csvText) { cleanup(); resolve(csvText || null); };
+    script.onerror = function() { cleanup(); resolve(null); };
     document.head.appendChild(script);
 
-    // Timeout de seguridad: si en 10s no responde, reintenta
-    setTimeout(() => {
-      if (window[cbName]) {
-        delete window[cbName];
-        if (document.head.contains(script)) document.head.removeChild(script);
-        resolve();
-      }
-    }, 10000);
+    setTimeout(() => { if (window[cbName]) { cleanup(); resolve(null); } }, 10000);
   });
+}
+
+// Convierte las filas de la pestaña "Insights" en { Momento: { Opcion: texto } }
+function buildSheetInsights(rows) {
+  const out = {};
+  if (!rows) return out;
+  rows.slice(1).forEach(r => {
+    const momento = parseInt((r[0]||'').trim(), 10);
+    const opcion = (r[2]||'').trim().toUpperCase();
+    const texto = (r[4]||'').trim();
+    if (!momento || !opcion || !texto) return;
+    if (!out[momento]) out[momento] = {};
+    out[momento][opcion] = texto;
+  });
+  return out;
+}
+
+async function loadData() {
+  const msg = document.getElementById('loading-msg');
+  try {
+    const [respCsv, insightsCsv] = await Promise.all([
+      fetchSheetTab('Respuestas'),
+      fetchSheetTab('Insights')
+    ]);
+    if (!respCsv) {
+      if (msg) msg.textContent = '❌ Error al conectar con Google Sheets.';
+      return;
+    }
+    const sheetInsights = buildSheetInsights(insightsCsv ? parseCSV(insightsCsv) : null);
+    renderScenarios(calcData(parseCSV(respCsv)), sheetInsights);
+  } catch (e) {
+    if (msg) msg.textContent = '❌ Error al procesar los datos.';
+  }
 }
 
 async function loop() {
