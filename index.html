@@ -191,6 +191,58 @@
     .kpi-name{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;}
     .kpi-desc{font-size:0.65rem;color:var(--muted);line-height:1.3;margin-top:3px;}
 
+    /* ══ TESTIMONIOS (carrusel continuo de compromisos, anónimo) ══ */
+    .testimonios{
+      background:linear-gradient(180deg,#ffffff,#f7f9fc);
+      border:1px solid rgba(30,58,138,0.12);border-radius:16px;
+      padding:1.1rem 0 1.3rem;overflow:hidden;
+    }
+    .testimonios-head{display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;margin-bottom:0.85rem;}
+    .testimonios-title{font-size:clamp(0.9rem,1.4vw,1.1rem);font-weight:800;color:var(--blue);letter-spacing:0.03em;display:flex;align-items:center;gap:8px;}
+    .testimonios-title::before{content:'';width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--green),var(--blue));display:inline-block;}
+    .testimonios-sub{font-size:0.65rem;color:var(--muted);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;}
+
+    .test-viewport{
+      overflow:hidden;position:relative;
+      -webkit-mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
+      mask-image:linear-gradient(90deg,transparent,#000 4%,#000 96%,transparent);
+    }
+    .test-track{
+      display:flex;gap:1.1rem;width:max-content;padding:0.2rem 1.5rem;
+      animation:test-scroll var(--test-duration,42s) linear infinite;
+    }
+    .test-viewport:hover .test-track{animation-play-state:paused;}
+    @keyframes test-scroll{
+      from{transform:translateX(0);}
+      to{transform:translateX(-50%);}
+    }
+
+    .test-card{
+      flex:0 0 300px;
+      background:#ffffff;border:1px solid rgba(30,58,138,0.1);
+      border-radius:14px;padding:1.1rem 1.2rem 1rem;
+      box-shadow:0 4px 14px rgba(15,23,42,0.06);
+      display:flex;flex-direction:column;gap:0.65rem;
+      position:relative;
+    }
+    .test-card::before{
+      content:'';position:absolute;top:0;left:1rem;right:1rem;height:3px;border-radius:0 0 4px 4px;
+      background:var(--accent,var(--blue));
+    }
+    .test-top{display:flex;align-items:center;gap:0.55rem;}
+    .test-avatar{
+      width:34px;height:34px;border-radius:50%;flex-shrink:0;
+      background:var(--accent,var(--blue));color:#fff;
+      display:flex;align-items:center;justify-content:center;
+      font-size:0.85rem;font-weight:800;
+    }
+    .test-id{display:flex;flex-direction:column;line-height:1.15;}
+    .test-anon{font-size:0.72rem;font-weight:800;color:#0f172a;}
+    .test-tag{font-size:0.6rem;color:var(--muted);font-weight:600;letter-spacing:0.03em;}
+    .test-stars{margin-left:auto;font-size:0.65rem;color:var(--green);letter-spacing:1px;}
+    .test-quote-icon{font-size:1.6rem;line-height:0.6;color:var(--accent,var(--blue));opacity:0.25;font-weight:900;}
+    .test-text{font-size:0.78rem;color:#1e293b;font-weight:500;line-height:1.5;}
+
     /* ══ FOOTER ══ */
     .foot{
       display:flex;align-items:center;justify-content:space-between;
@@ -213,6 +265,7 @@
     @media(max-width:600px){
       .logos{display:none;}
       .kpi-grid{grid-template-columns:repeat(2,1fr);}
+      .test-card{flex:0 0 240px;}
     }
   </style>
 </head>
@@ -242,6 +295,17 @@
   <div class="consolidado" id="consolidado" style="display:none;">
     <div class="consolidado-title">RESULTADOS CONSOLIDADOS</div>
     <div class="kpi-grid" id="kpi-grid"></div>
+  </div>
+
+  <!-- TESTIMONIOS: compromisos anónimos de los participantes -->
+  <div class="testimonios" id="testimonios-section" style="display:none;">
+    <div class="testimonios-head">
+      <div class="testimonios-title">COMPROMISOS DESTACADOS</div>
+      <div class="testimonios-sub">Respuestas anónimas de los participantes</div>
+    </div>
+    <div class="test-viewport">
+      <div class="test-track" id="testimonios-track"></div>
+    </div>
   </div>
 </div>
 
@@ -481,6 +545,70 @@ function renderScenarios(scenData, sheetInsights) {
   }
 }
 
+// ════════════════════════════════════════════════════════════════════
+// TESTIMONIOS: carrusel continuo (estilo "reseñas destacadas") con los
+// compromisos escritos por los participantes, tomados de la pestaña
+// "Reflexiones_Compromisos" (columnas: Telefono | Nombre | Reflexión |
+// Compromiso | Fecha). Es ANÓNIMO: no se muestra el nombre real, solo
+// un rótulo genérico "Participante N". Se toman los primeros 8
+// registros con Compromiso no vacío.
+// ════════════════════════════════════════════════════════════════════
+const TESTIMONIOS_LIMIT = 8;
+const TEST_ACCENTS = ['#2B4585', '#90BF3E', '#6F6E6E'];
+let testimonios = [];
+
+function buildTestimonios(rows) {
+  if (!rows) return [];
+  return rows.slice(1)
+    .filter(r => (r[3] || '').trim())
+    .slice(0, TESTIMONIOS_LIMIT)
+    .map(r => ({ compromiso: (r[3] || '').trim() }));
+}
+
+let testimoniosKey = '';
+
+function renderTestimonios(list) {
+  const section = document.getElementById('testimonios-section');
+  const track = document.getElementById('testimonios-track');
+  if (!list.length) { section.style.display = 'none'; return; }
+
+  // El dashboard refresca datos cada pocos segundos; si los compromisos
+  // no cambiaron, no se reescribe el track para no reiniciar la animación
+  // (eso se vería como un salto/tirón cada vez que recarga).
+  const key = JSON.stringify(list);
+  if (key === testimoniosKey) { section.style.display = 'block'; return; }
+  testimoniosKey = key;
+
+  section.style.display = 'block';
+
+  const cardHtml = (t, i) => {
+    const accent = TEST_ACCENTS[i % TEST_ACCENTS.length];
+    return `
+    <div class="test-card" style="--accent:${accent}">
+      <div class="test-top">
+        <div class="test-avatar" style="background:${accent}">👤</div>
+        <div class="test-id">
+          <span class="test-anon">Participante ${i + 1}</span>
+          <span class="test-tag">Capacitación Santa Luisa</span>
+        </div>
+        <div class="test-stars">★★★★★</div>
+      </div>
+      <div class="test-quote-icon">“</div>
+      <div class="test-text">${t.compromiso}</div>
+    </div>`;
+  };
+
+  // Se duplica la lista para lograr un loop infinito sin salto visible
+  // (la animación CSS recorre translateX(0) -> translateX(-50%)).
+  const items = list.map((t, i) => cardHtml(t, i)).join('')
+              + list.map((t, i) => cardHtml(t, i)).join('');
+  track.innerHTML = items;
+
+  // Duración proporcional a la cantidad de tarjetas, para que la
+  // velocidad de desplazamiento se vea siempre pareja y lenta.
+  track.style.setProperty('--test-duration', `${list.length * 6}s`);
+}
+
 // Pide una pestaña del Sheet (vía Apps Script + JSONP) y devuelve su CSV
 // como texto. Si falla o tarda más de 10s, devuelve null (no rompe nada).
 function fetchSheetTab(nombrePestaña) {
@@ -517,9 +645,10 @@ function buildSheetInsights(rows) {
 async function loadData() {
   const msg = document.getElementById('loading-msg');
   try {
-    const [respCsv, insightsCsv] = await Promise.all([
+    const [respCsv, insightsCsv, compromisosCsv] = await Promise.all([
       fetchSheetTab('Respuestas'),
-      fetchSheetTab('Insights')
+      fetchSheetTab('Insights'),
+      fetchSheetTab('Reflexiones_Compromisos')
     ]);
     if (!respCsv) {
       if (msg) msg.textContent = '❌ Error al conectar con Google Sheets.';
@@ -527,6 +656,9 @@ async function loadData() {
     }
     const sheetInsights = buildSheetInsights(insightsCsv ? parseCSV(insightsCsv) : null);
     renderScenarios(calcData(parseCSV(respCsv)), sheetInsights);
+
+    testimonios = buildTestimonios(compromisosCsv ? parseCSV(compromisosCsv) : null);
+    renderTestimonios(testimonios);
   } catch (e) {
     if (msg) msg.textContent = '❌ Error al procesar los datos.';
   }
