@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simulación Experiencial — Minera Santa Luisa</title>
+  <title>Liderar con Respeto — Minera Santa Luisa</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
@@ -223,8 +223,8 @@
   <div class="top-left">
     <img class="main-logo" src="Logo_MineraSantaLuisa.png" alt="Minera Santa Luisa"/>
     <div class="top-titles">
-      <h1>SIMULACIÓN EXPERIENCIAL</h1>
-      <p>Decisiones bajo presión operacional</p>
+      <h1>LIDERAR CON RESPETO</h1>
+      <p>Reconociendo señales tempranas de hostigamiento</p>
     </div>
   </div>
   <div class="logos">
@@ -249,44 +249,58 @@
 
 
 <script>
-// ⚠️ PENDIENTE: esta es la URL del Apps Script de Noatum. Actualizar con
-// la URL del Apps Script nuevo de Minera Santa Luisa en cuanto tu
-// compañero termine el worker y publique el Sheet.
+// ⚠️ PENDIENTE: reemplazar con la URL /exec que te da Google al desplegar
+// el Apps Script (ver AppsScript_Code.gs) en el Sheet "Liderar con Respeto
+// - Santa Luisa". Por ahora sigue apuntando al Sheet viejo de Noatum.
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwWh2ZfJGDyBtwYFjsPiKHAoOo_oUYmb4_V68GvT_ssj8MhTkvjpe4FjZoLKeZ4WohP/exec';
 const REFRESH_MS = 30000;
 const charts = {};
 
 // ════════════════════════════════════════════════════════════════════
-// ⚠️ TEXTO DE EJEMPLO — Reemplazar con el contenido real de Minera Santa
-// Luisa en cuanto el equipo entregue los escenarios, opciones e insights
-// definitivos. Esta es toda la sección que hay que actualizar.
+// Contenido de "Liderar con Respeto" — simulación de prevención del
+// hostigamiento. Los INSIGHTS fueron redactados a partir del documento
+// de la dinámica; revísalos y ajústalos con tu equipo si algo no calza.
 // ════════════════════════════════════════════════════════════════════
-const SCENARIO_NAMES = { 1:'ACARREO BAJO PRESIÓN', 2:'OPERARIO EXPERIMENTADO', 3:'PRESIÓN DE SUPERINTENDENCIA' };
+const SCENARIO_NAMES = { 1:'EL COMENTARIO INICIAL', 2:'INSISTENCIA REPETIDA', 3:'MENSAJES FUERA DE HORARIO' };
 
-// Deja la ruta vacía ('') mientras no haya imagen real: se muestra un
-// placeholder limpio. Cuando tengan las imágenes del nuevo proyecto,
-// solo hay que poner el nombre de archivo aquí, ej: 'Escenario 1.png'
-const SCENARIO_IMAGES = { 1:'', 2:'', 3:'' };
+// Pon aquí el nombre del archivo de cada imagen (ej: 'Momento 1.png').
+// Súbelas a la raíz del repo con esos mismos nombres.
+const SCENARIO_IMAGES = { 1:'Momento 1.png', 2:'Momento 2.png', 3:'Momento 3.png' };
 
 const OPTIONS_TEXT = {
-  1:{ A:'Avanzar el acarreo para no perder tiempo de turno.', B:'Detener el acarreo hasta confirmar la señalización y el bloqueo del área.', C:'Cargar parcialmente mientras se completa la señalización.' },
-  2:{ A:'Continuar la maniobra de izaje confiando en la experiencia del operador.', B:'Detener la maniobra y verificar nuevamente los puntos de anclaje.', C:'Terminar rápido la maniobra para no atrasar el turno.' },
-  3:{ A:'Reiniciar la actividad porque lo solicita superintendencia.', B:'Mantener la suspensión hasta cumplir las condiciones de reinicio.', C:'Reiniciar parcialmente mientras se evalúan las condiciones.' }
+  1:{ A:'Es un comentario normal.', B:'Puede resultar incómodo para algunas personas.', C:'Constituye claramente hostigamiento sexual.', D:'No estoy seguro.' },
+  2:{ A:'Amabilidad entre compañeros.', B:'Interés personal legítimo.', C:'Reiteradas invitaciones que podrían generar incomodidad.', D:'No veo ningún problema.' },
+  3:{ A:'Una conversación completamente normal.', B:'Un interés personal sin consecuencias.', C:'Una conducta que puede generar incomodidad y afectar el bienestar de la persona.', D:'No estoy seguro.' }
 };
 
 const INSIGHTS = {
-  1:{ A:'La mayoría priorizó recuperar el tiempo de turno aun con la señalización incompleta. La presión por cumplir puede desplazar decisiones preventivas.', B:'La mayoría priorizó confirmar la señalización antes de continuar el acarreo. Esto refleja una cultura preventiva que se mantiene incluso bajo presión de turno.', C:'La mayoría optó por una solución intermedia. Bajo presión, las operaciones tienden a negociar parcialmente el riesgo para no detener completamente la actividad.' },
-  2:{ A:'La mayoría confió en la experiencia del operador para continuar. La costumbre puede disminuir la percepción real del riesgo en maniobras de izaje.', B:'La mayoría priorizó verificar los anclajes antes de continuar. La experiencia no reemplaza la verificación activa de los controles críticos.', C:'La mayoría permitió terminar rápido para no afectar el turno. Bajo rutinas conocidas, el riesgo puede normalizarse sin generar una verificación adicional.' },
-  3:{ A:'La mayoría priorizó reiniciar por el nivel jerárquico de la solicitud. La autoridad puede influir en el cumplimiento de los protocolos de reinicio.', B:'La mayoría mantuvo la suspensión hasta cumplir las condiciones. El protocolo se sostiene incluso ante solicitudes jerárquicas.', C:'La mayoría reinició parcialmente para mantener la continuidad. Bajo presión jerárquica, las operaciones tienden a flexibilizar temporalmente los estándares.' }
+  1:{
+    A:'La mayoría percibió el comentario como algo normal. Comentarios sobre la apariencia, aunque parezcan halagos, pueden ser el primer paso de una dinámica de hostigamiento si no se cuestionan a tiempo.',
+    B:'La mayoría reconoció que el comentario podría incomodar a otras personas. Esa sensibilidad es clave: lo que parece un cumplido puede sentirse como una invasión, dependiendo de quién lo dice y en qué contexto.',
+    C:'La mayoría identificó el comentario como hostigamiento sexual desde el primer momento. Reconocer estas señales tempranas es fundamental para prevenir que la situación escale.',
+    D:'La mayoría no tuvo certeza sobre cómo interpretar la situación. La duda frente a estos comentarios es común — por eso es importante generar espacios donde consultar y reportar sin temor.'
+  },
+  2:{
+    A:'La mayoría interpretó la insistencia como simple amabilidad. Repetir una invitación después de respuestas evasivas suele ser una señal de que no se están leyendo las señales de incomodidad.',
+    B:'La mayoría vio esto como un interés personal legítimo. Sin embargo, la reiteración pese a las respuestas evasivas de Andrea es justamente lo que distingue el interés genuino de una insistencia que ignora los límites.',
+    C:'La mayoría identificó que la insistencia, más allá de la intención, puede generar incomodidad. Repetir una invitación después de respuestas evasivas es una señal de alerta que vale la pena reconocer.',
+    D:'La mayoría no percibió ningún problema en la situación. Es común no notar la insistencia cuando no se está en el lugar de quien la recibe — por eso es clave entrenar la mirada hacia cómo se siente la otra persona.'
+  },
+  3:{
+    A:'La mayoría consideró los mensajes nocturnos como una conversación normal. El silencio de Andrea y la insistencia posterior de Carlos son señales que merecen más atención de la que recibieron.',
+    B:'La mayoría no vio consecuencias en estos mensajes. Pero presionar a alguien por no responder fuera del horario laboral sí tiene un efecto: genera presión e incomodidad, incluso sin esa intención.',
+    C:'La mayoría reconoció el impacto que estos mensajes pueden tener en el bienestar de la persona. Insistir después del silencio, y cuestionar ese silencio, es una conducta que cruza un límite importante.',
+    D:'La mayoría no tuvo certeza frente a esta situación. Los mensajes fuera de horario y la presión por una respuesta son un área gris para muchas personas — reconocerlo es el primer paso para identificarlos mejor.'
+  }
 };
 
 const FACTORES = {
-  1:['⚡ Presión de turno','⚖️ Continuidad vs prevención','🧠 Toma de decisiones'],
-  2:['⚠️ Exceso de confianza','👁️ Normalización del riesgo','🪝 Puntos de anclaje'],
-  3:['👤 Autoridad operacional','🌩️ Condiciones de reinicio','🛡️ Liderazgo preventivo']
+  1:['💬 Comentario sobre apariencia','🌅 Primeras señales','🤔 Percepción individual'],
+  2:['🔁 Insistencia repetida','🚩 Señal de alerta','🙅 Respuesta evasiva'],
+  3:['🌙 Fuera de horario laboral','📱 Presión por respuesta','💭 Bienestar emocional']
 };
 
-const OPTION_COLORS = { A:"#2B4585", B:"#90BF3E", C:"#6F6E6E" };
+const OPTION_COLORS = { A:"#2B4585", B:"#90BF3E", C:"#6F6E6E", D:"#A9B4C2" };
 
 function parseCSV(text) {
   const rows = [];
@@ -306,28 +320,29 @@ function parseCSV(text) {
 }
 
 function calcData(rows) {
-  // Estructura: Telefono | Nombre | RespE1 | RespE2 | RespE3 | Fecha
+  // Estructura: Telefono | Nombre | Momento1 | Momento2 | Momento3 | Fecha
   const data = rows.slice(1).filter(r => r[2] && r[2].trim());
   console.log('Total filas:', data.length);
   data.forEach((r,i) => console.log(`Fila ${i+1}:`, JSON.stringify(r)));
 
   return [1,2,3].map(idx => {
-    const col = idx + 1; // E1=col2, E2=col3, E3=col4
+    const col = idx + 1; // M1=col2, M2=col3, M3=col4
     const vA = data.filter(r => (r[col]||'').trim().toUpperCase()==='A').length;
     const vB = data.filter(r => (r[col]||'').trim().toUpperCase()==='B').length;
     const vC = data.filter(r => (r[col]||'').trim().toUpperCase()==='C').length;
-    const total = vA+vB+vC;
+    const vD = data.filter(r => (r[col]||'').trim().toUpperCase()==='D').length;
+    const total = vA+vB+vC+vD;
+    // Mayoría simple, sin jerarquía entre opciones (no hay respuesta "correcta")
     let mayoria = null;
     if (total > 0) {
-      mayoria = 'A';
-      if (vB>=vA && vB>=vC) mayoria='B';
-      else if (vC>vA && vC>vB) mayoria='C';
+      const counts = { A:vA, B:vB, C:vC, D:vD };
+      mayoria = ['A','B','C','D'].reduce((best,k) => counts[k] > counts[best] ? k : best, 'A');
     }
-    return {idx, vA, vB, vC, total, mayoria};
+    return {idx, vA, vB, vC, vD, total, mayoria};
   });
 }
 
-function renderDonut(id, vA, vB, vC, total) {
+function renderDonut(id, vA, vB, vC, vD, total) {
   const canvas = document.getElementById(id);
   if (!canvas) return;
   if (charts[id]) { charts[id].destroy(); delete charts[id]; }
@@ -335,10 +350,10 @@ function renderDonut(id, vA, vB, vC, total) {
   charts[id] = new Chart(canvas.getContext('2d'), {
     type: 'doughnut',
     data: {
-      labels: ['A','B','C'],
+      labels: ['A','B','C','D'],
       datasets:[{
-        data: hasData ? [vA,vB,vC] : [1,1,1],
-        backgroundColor: hasData ? ['#2B4585','#90BF3E','#6F6E6E'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
+        data: hasData ? [vA,vB,vC,vD] : [1,1,1,1],
+        backgroundColor: hasData ? ['#2B4585','#90BF3E','#6F6E6E','#A9B4C2'] : ['#e2e8f0','#e2e8f0','#e2e8f0','#e2e8f0'],
         borderWidth: 0, hoverOffset: 4
       }]
     },
@@ -354,28 +369,36 @@ function renderScenarios(scenData) {
   Object.keys(charts).forEach(id => { if(charts[id]){charts[id].destroy();delete charts[id];} });
   grid.innerHTML = '';
 
-  let totalAll = 0, totalB = 0, totalA = 0, totalC = 0;
-  scenData.forEach(({vA,vB,vC,total}) => { totalAll+=total; totalA+=vA; totalB+=vB; totalC+=vC; });
+  let totalAll = 0, totalA = 0, totalB = 0, totalC = 0, totalD = 0;
+  scenData.forEach(({vA,vB,vC,vD,total}) => { totalAll+=total; totalA+=vA; totalB+=vB; totalC+=vC; totalD+=vD; });
 
-  document.title = `Simulación Experiencial — ${totalAll} participantes`;
+  document.title = `Liderar con Respeto — ${totalAll} participantes`;
 
-  scenData.forEach(({idx, vA, vB, vC, total, mayoria}) => {
+  scenData.forEach(({idx, vA, vB, vC, vD, total, mayoria}) => {
     const pct = v => total ? Math.round(v/total*100) : 0;
     const chartId = `chart-${idx}`;
-    const mayorPct = mayoria ? pct(mayoria==='A'?vA:mayoria==='B'?vB:vC) : 0;
+    const votes = { A:vA, B:vB, C:vC, D:vD };
+    const mayorPct = mayoria ? pct(votes[mayoria]) : 0;
     const winColor = mayoria ? OPTION_COLORS[mayoria] : '#666';
     const hasData = total > 0;
 
+    const legendRows = ['A','B','C','D'].map(letter => `
+            <div class="leg-row">
+              <div class="leg-left"><span class="leg-sq" style="background:${OPTION_COLORS[letter]}"></span>${letter}</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(votes[letter])}%;background:${OPTION_COLORS[letter]}"></div></div>
+              <span class="leg-pct">${pct(votes[letter])}%</span>
+            </div>`).join('');
+
     const wrapper = document.createElement('div');
     wrapper.className = 'sc-wrapper';
-    wrapper.innerHTML = `<div class="sc-header-ext"><span class="sc-tag-ext">SIMULACIÓN ${idx}</span><span class="sc-name-ext">${SCENARIO_NAMES[idx]}</span></div>`;
+    wrapper.innerHTML = `<div class="sc-header-ext"><span class="sc-tag-ext">MOMENTO ${idx}</span><span class="sc-name-ext">${SCENARIO_NAMES[idx]}</span></div>`;
 
     const card = document.createElement('div');
     card.className = 'sc-card';
     card.innerHTML = `
       <div class="sc-img-area">
         ${SCENARIO_IMAGES[idx]
-          ? `<img src="${SCENARIO_IMAGES[idx]}" alt="Escenario ${idx}" onerror="this.style.display='none'"/>`
+          ? `<img src="${SCENARIO_IMAGES[idx]}" alt="Momento ${idx}" onerror="this.style.display='none'"/>`
           : `<div class="sc-img-placeholder">📷 Imagen pendiente</div>`}
       </div>
       <div class="sc-body">
@@ -388,26 +411,11 @@ function renderScenarios(scenData) {
               <span class="pct-lbl">opción ${mayoria}</span>
             </div>
           </div>
-          <div class="legend">
-            <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#2B4585"></span>A</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vA)}%;background:#2B4585"></div></div>
-              <span class="leg-pct">${pct(vA)}%</span>
-            </div>
-            <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#90BF3E"></span>B</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vB)}%;background:#90BF3E"></div></div>
-              <span class="leg-pct">${pct(vB)}%</span>
-            </div>
-            <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#6F6E6E"></span>C</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#6F6E6E"></div></div>
-              <span class="leg-pct">${pct(vC)}%</span>
-            </div>
+          <div class="legend">${legendRows}
           </div>
         </div>
         <div class="insight-section">
-          <span class="insight-icon">${mayoria === 'B' ? '✅' : '⚠️'}</span>
+          <span class="insight-icon">💬</span>
           <div class="insight-inner">
             <div class="insight-lbl">INSIGHT IA</div>
             <div class="insight-text">${INSIGHTS[idx][mayoria]}</div>
@@ -417,7 +425,7 @@ function renderScenarios(scenData) {
       </div>`;
     wrapper.appendChild(card);
     grid.appendChild(wrapper);
-    if (hasData) renderDonut(chartId, vA, vB, vC, total);
+    if (hasData) renderDonut(chartId, vA, vB, vC, vD, total);
   });
 
   // Consolidado
@@ -426,60 +434,47 @@ function renderScenarios(scenData) {
     con.style.display = 'block';
     const kpiGrid = document.getElementById('kpi-grid');
 
-    // Obtener datos individuales por escenario
-    const e1 = scenData.find(s => s.idx === 1);
-    const e2 = scenData.find(s => s.idx === 2);
-    const e3 = scenData.find(s => s.idx === 3);
-
-    // 1. CULTURA PREVENTIVA: % B en todos los escenarios
-    const cultPct = Math.round(totalB / totalAll * 100);
-
-    // 2. PRESIÓN OPERACIONAL: % A en E1 + E3 (escenarios de presión explícita)
-    const presTotal = (e1?.total||0) + (e3?.total||0);
-    const presPct = presTotal ? Math.round(((e1?.vA||0) + (e3?.vA||0)) / presTotal * 100) : 0;
-
-    // 3. NORMALIZACIÓN DEL RIESGO: % A+C en E2 (personal expuesto)
-    const normPct = (e2?.total||0) ? Math.round(((e2?.vA||0) + (e2?.vC||0)) / e2.total * 100) : 0;
-
-    // 4. CRITERIO BAJO JERARQUÍA: % B en E3 (presión directa del cliente)
-    const critPct = (e3?.total||0) ? Math.round((e3?.vB||0) / e3.total * 100) : 0;
+    // Métricas agregadas sobre el total de respuestas (A+B+C+D) en los 3 momentos.
+    // No califican respuestas como "correctas": describen patrones de percepción.
+    const pctA = totalAll ? Math.round(totalA / totalAll * 100) : 0;
+    const pctB = totalAll ? Math.round(totalB / totalAll * 100) : 0;
+    const pctC = totalAll ? Math.round(totalC / totalAll * 100) : 0;
+    const pctD = totalAll ? Math.round(totalD / totalAll * 100) : 0;
 
     kpiGrid.innerHTML = `
       <div class="kpi-card">
-        <div class="kpi-icon">🛡️</div>
+        <div class="kpi-icon">💬</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--green)">${cultPct}%</div>
-          <div class="kpi-name" style="color:var(--green)">CULTURA PREVENTIVA</div>
-          <div class="kpi-desc">Decisiones que priorizaron detener y asegurar</div>
+          <div class="kpi-pct" style="color:${OPTION_COLORS.A}">${pctA}%</div>
+          <div class="kpi-name" style="color:${OPTION_COLORS.A}">LO PERCIBEN COMO NORMAL</div>
+          <div class="kpi-desc">Ven la situación como un comportamiento habitual</div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-icon">⚡</div>
+        <div class="kpi-icon">🤝</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--blue)">${presPct}%</div>
-          <div class="kpi-name" style="color:var(--blue)">PRESIÓN OPERACIONAL</div>
-          <div class="kpi-desc">Cedieron ante presión de supervisor o tiempo</div>
+          <div class="kpi-pct" style="color:${OPTION_COLORS.B}">${pctB}%</div>
+          <div class="kpi-name" style="color:${OPTION_COLORS.B}">LO ATRIBUYEN A BUENA INTENCIÓN</div>
+          <div class="kpi-desc">Lo interpretan como amabilidad o interés genuino</div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-icon">👁️</div>
+        <div class="kpi-icon">🚩</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:#6F6E6E">${normPct}%</div>
-          <div class="kpi-name" style="color:#6F6E6E">NORMALIZACIÓN DEL RIESGO</div>
-          <div class="kpi-desc">Continuaron con personal expuesto bajo carga suspendida</div>
+          <div class="kpi-pct" style="color:${OPTION_COLORS.C}">${pctC}%</div>
+          <div class="kpi-name" style="color:${OPTION_COLORS.C}">RECONOCEN LA SEÑAL DE ALERTA</div>
+          <div class="kpi-desc">Identifican la conducta como una posible falta de respeto</div>
         </div>
       </div>
       <div class="kpi-card">
-        <div class="kpi-icon">⚖️</div>
+        <div class="kpi-icon">❓</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--green)">${critPct}%</div>
-          <div class="kpi-name" style="color:var(--green)">CRITERIO BAJO JERARQUÍA</div>
-          <div class="kpi-desc">Sostuvieron el protocolo ante presión del cliente</div>
+          <div class="kpi-pct" style="color:${OPTION_COLORS.D}">${pctD}%</div>
+          <div class="kpi-name" style="color:${OPTION_COLORS.D}">TIENEN DUDAS</div>
+          <div class="kpi-desc">No están seguros de cómo interpretar la situación</div>
         </div>
       </div>`;
   }
-
-  
 }
 
 function loadData() {
