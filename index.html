@@ -288,7 +288,7 @@
 <div class="main">
   <!-- ESCENARIOS -->
   <div class="scenarios-grid" id="scenarios-grid">
-    <div class="status-msg" id="loading-msg">⏳ Conectando con los datos...</div>
+    <div class="status-msg" id="loading-msg">⏳ Conectando con los datos (puede tardar unos segundos la primera vez)...</div>
   </div>
 
   <!-- CONSOLIDADO -->
@@ -610,7 +610,7 @@ function renderTestimonios(list) {
 }
 
 // Pide una pestaña del Sheet (vía Apps Script + JSONP) y devuelve su CSV
-// como texto. Si falla o tarda más de 10s, devuelve null (no rompe nada).
+// como texto. Si falla o tarda más de 20s, devuelve null (no rompe nada).
 function fetchSheetTab(nombrePestaña) {
   return new Promise((resolve) => {
     const cbName = 'cb_' + nombrePestaña.replace(/\s+/g,'_') + '_' + Date.now();
@@ -623,7 +623,7 @@ function fetchSheetTab(nombrePestaña) {
     script.onerror = function() { cleanup(); resolve(null); };
     document.head.appendChild(script);
 
-    setTimeout(() => { if (window[cbName]) { cleanup(); resolve(null); } }, 10000);
+    setTimeout(() => { if (window[cbName]) { cleanup(); resolve(null); } }, 20000);
   });
 }
 
@@ -651,22 +651,27 @@ async function loadData() {
       fetchSheetTab('Reflexiones_Compromisos')
     ]);
     if (!respCsv) {
-      if (msg) msg.textContent = '❌ Error al conectar con Google Sheets.';
-      return;
+      if (msg) msg.textContent = '⏳ Conectando con los datos (puede tardar unos segundos la primera vez)...';
+      return false;
     }
     const sheetInsights = buildSheetInsights(insightsCsv ? parseCSV(insightsCsv) : null);
     renderScenarios(calcData(parseCSV(respCsv)), sheetInsights);
 
     testimonios = buildTestimonios(compromisosCsv ? parseCSV(compromisosCsv) : null);
     renderTestimonios(testimonios);
+    return true;
   } catch (e) {
-    if (msg) msg.textContent = '❌ Error al procesar los datos.';
+    if (msg) msg.textContent = '⏳ Conectando con los datos (puede tardar unos segundos la primera vez)...';
+    return false;
   }
 }
 
 async function loop() {
-  await loadData();
-  setTimeout(loop, REFRESH_MS);
+  const ok = await loadData();
+  // Mientras no haya cargado ni una vez, reintenta cada 3s (más rápido que el
+  // ciclo normal) — una vez que ya mostró datos, sigue con el ciclo de siempre.
+  const aunSinCargar = !!document.getElementById('loading-msg');
+  setTimeout(loop, (!ok && aunSinCargar) ? 3000 : REFRESH_MS);
 }
 
 loop();
