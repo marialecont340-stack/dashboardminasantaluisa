@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Simulación Experiencial — Noatum</title>
+  <title>Simulación Experiencial — Minera Santa Luisa</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
     :root{
       --bg:#f0f4f8;
       --card:#ffffff;
-      --border:rgba(30,58,138,0.12);
-      --red:#C8102E;
-      --blue:#1e3a8a;
-      --blue-light:#2563eb;
-      --a:#f59e0b;--b:#2563eb;--c:#10b981;
-      --teal:#2563eb;
+      --border:rgba(43,69,133,0.14);
+      --blue:#2B4585;
+      --blue-light:#4a64a8;
+      --green:#90BF3E;
+      --gray:#6F6E6E;
+      --a:#2B4585;--b:#90BF3E;--c:#6F6E6E;
       --text:#0f172a;
-      --muted:#64748b;
+      --muted:#6F6E6E;
     }
 
     body {
@@ -33,13 +33,13 @@
       display:flex;align-items:center;justify-content:space-between;
       padding:1.1rem 2.5rem;
       background:#fff;
-      border-bottom:4px solid var(--red);
+      border-bottom:4px solid var(--blue);
       flex-wrap:wrap;gap:0.75rem;
     }
     .top-left{display:flex;align-items:center;gap:1.25rem;}
-    .noatum-logo{height:56px;width:auto;object-fit:contain;}
+    .main-logo{height:56px;width:auto;object-fit:contain;}
     .top-titles h1{font-size:clamp(1.1rem,2.2vw,1.8rem);font-weight:800;letter-spacing:0.02em;color:#0a1628;}
-    .top-titles p{font-size:clamp(0.65rem,1vw,0.9rem);color:var(--red);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+    .top-titles p{font-size:clamp(0.65rem,1vw,0.9rem);color:var(--blue);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
     .logos{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;}
     .partner-logo--aa{ background:#1a1a2e; }
     .partner-logo--exp{ }
@@ -79,7 +79,7 @@
       border-bottom:1px solid var(--border);
       display:flex;align-items:center;gap:0.75rem;
     }
-    .quote-bar .q-icon{font-size:1.2rem;color:var(--red);opacity:0.9;}
+    .quote-bar .q-icon{font-size:1.2rem;color:var(--blue);opacity:0.9;}
     .quote-bar p{font-size:clamp(0.7rem,1.2vw,0.88rem);color:#334155;font-style:italic;}
 
     /* ══ MAIN GRID ══ */
@@ -100,7 +100,7 @@
     .sc-tag-ext{
       font-size:0.6rem; font-weight:800; letter-spacing:0.12em;
       text-transform:uppercase; color:#fff;
-      background:var(--red); border-radius:20px;
+      background:var(--blue); border-radius:20px;
       padding:2px 8px; flex-shrink:0;
     }
     .sc-name-ext{
@@ -117,13 +117,14 @@
       display:flex;align-items:flex-end;
     }
     .sc-img-area img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:0.85;}
+    .sc-img-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:rgba(255,255,255,0.5);letter-spacing:0.04em;}
     .sc-title-overlay{
       position:absolute;bottom:0;left:0;right:0;
       background:linear-gradient(transparent,rgba(0,0,0,0.82));
       padding:0.5rem 0.75rem;
     }
-    .sc-tag{font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--red);display:flex;align-items:center;gap:5px;}
-    .sc-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--red);}
+    .sc-tag{font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue);display:flex;align-items:center;gap:5px;}
+    .sc-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);}
     .sc-name{font-size:clamp(0.8rem,1.3vw,1rem);font-weight:800;color:#0f172a;line-height:1.1;}
 
     .sc-body{padding:0.5rem 0.65rem;display:flex;flex-direction:column;gap:0.4rem;flex:1;}
@@ -144,7 +145,7 @@
     /* Winning answer */
     .winning-section{background:#eff6ff;border:1px solid rgba(37,99,235,0.2);border-radius:10px;padding:0.5rem 0.65rem;}
     .winning-lbl{font-size:0.58rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--blue-light);margin-bottom:0.3rem;}
-    .winning-row{display:flex;align-items:flex-start;gap:0.5rem;background:#fff5f5;border-left:2px solid var(--red);border-radius:0 8px 8px 0;padding:0.4rem 0.6rem;}
+    .winning-row{display:flex;align-items:flex-start;gap:0.5rem;background:#eef1f8;border-left:2px solid var(--blue);border-radius:0 8px 8px 0;padding:0.4rem 0.6rem;}
     .winning-badge{
       width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;
       font-size:0.9rem;font-weight:800;flex-shrink:0;margin-top:1px;
@@ -152,10 +153,10 @@
     .winning-text{font-size:clamp(0.6rem,0.9vw,0.72rem);line-height:1.4;color:#1e293b;}
 
     /* Insight */
-    .insight-section{display:flex;align-items:flex-start;gap:0.5rem;background:#fff0f0;border-left:4px solid var(--red);border-radius:0 8px 8px 0;padding:0.45rem 0.65rem;}
+    .insight-section{display:flex;align-items:flex-start;gap:0.5rem;background:#eef1f8;border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:0.45rem 0.65rem;}
     .insight-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px;}
     .insight-inner{}
-    .insight-lbl{font-size:0.7rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--red);margin-bottom:5px;}
+    .insight-lbl{font-size:0.7rem;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;color:var(--blue);margin-bottom:5px;}
     .insight-text{font-size:clamp(0.75rem,1vw,0.85rem);line-height:1.5;color:#0f172a;font-weight:500;}
 
     /* Factores */
@@ -197,7 +198,7 @@
     }
     .foot-left{display:flex;align-items:center;gap:6px;font-size:0.65rem;color:#64748b;}
     .foot-clock{font-size:0.65rem;color:#64748b;}
-    .foot-hash{font-size:0.65rem;color:var(--red);font-weight:600;}
+    .foot-hash{font-size:0.65rem;color:var(--blue);font-weight:600;}
 
     /* ══ LOADING ══ */
     .status-msg{text-align:center;padding:3rem;color:var(--muted);font-size:0.9rem;}
@@ -220,15 +221,13 @@
 <!-- HEADER -->
 <div class="top-bar">
   <div class="top-left">
-    <img class="noatum-logo" src="Logo_WSP_Noatum.png" alt="Noatum Logistics"/>
+    <img class="main-logo" src="Logo_MineraSantaLuisa.png" alt="Minera Santa Luisa"/>
     <div class="top-titles">
       <h1>SIMULACIÓN EXPERIENCIAL</h1>
       <p>Decisiones bajo presión operacional</p>
     </div>
   </div>
   <div class="logos">
-    <img class="partner-logo partner-logo--aa" src="Logo_angloamerican.png" alt="Anglo American" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/><span class="logo-fallback">Anglo American</span>
-    <img class="partner-logo partner-logo--influye" src="Logo_influye.png" alt="Influye" onerror="this.style.display='none'"/>
     <img class="partner-logo partner-logo--exp" src="Logo_explayrience.png" alt="Explayrience" onerror="this.style.display='none'"/>
   </div>
 </div>
@@ -250,32 +249,44 @@
 
 
 <script>
+// ⚠️ PENDIENTE: esta es la URL del Apps Script de Noatum. Actualizar con
+// la URL del Apps Script nuevo de Minera Santa Luisa en cuanto tu
+// compañero termine el worker y publique el Sheet.
 const SHEET_URL = 'https://script.google.com/macros/s/AKfycbwWh2ZfJGDyBtwYFjsPiKHAoOo_oUYmb4_V68GvT_ssj8MhTkvjpe4FjZoLKeZ4WohP/exec';
 const REFRESH_MS = 30000;
 const charts = {};
 
-const SCENARIO_NAMES = { 1:'DESPACHO ATRASADO', 2:'GENTE EXPERIMENTADA', 3:'RESPETO DE JERARQUÍA' };
-const SCENARIO_IMAGES = { 1:'Escenario 1.png', 2:'Escenario 2.png', 3:'Escenario 3.png' };
+// ════════════════════════════════════════════════════════════════════
+// ⚠️ TEXTO DE EJEMPLO — Reemplazar con el contenido real de Minera Santa
+// Luisa en cuanto el equipo entregue los escenarios, opciones e insights
+// definitivos. Esta es toda la sección que hay que actualizar.
+// ════════════════════════════════════════════════════════════════════
+const SCENARIO_NAMES = { 1:'ACARREO BAJO PRESIÓN', 2:'OPERARIO EXPERIMENTADO', 3:'PRESIÓN DE SUPERINTENDENCIA' };
+
+// Deja la ruta vacía ('') mientras no haya imagen real: se muestra un
+// placeholder limpio. Cuando tengan las imágenes del nuevo proyecto,
+// solo hay que poner el nombre de archivo aquí, ej: 'Escenario 1.png'
+const SCENARIO_IMAGES = { 1:'', 2:'', 3:'' };
 
 const OPTIONS_TEXT = {
-  1:{ A:'Avanzar rápidamente para evitar más retraso operacional.', B:'Detener el movimiento hasta asegurar completamente la segregación y el área.', C:'Mover solo parte de la carga mientras terminan de acondicionar la zona.' },
-  2:{ A:'Continuar la maniobra porque el personal tiene experiencia.', B:'Detener la actividad y retirar al personal expuesto de la línea de maniobra.', C:'Permitir terminar rápidamente para evitar retrasar la operación.' },
-  3:{ A:'Continuar la operación porque la solicitud viene directamente del cliente.', B:'Detener el inicio de la maniobra hasta completar las validaciones y autorizaciones.', C:'Avanzar parcialmente mientras se termina de regularizar la documentación.' }
+  1:{ A:'Avanzar el acarreo para no perder tiempo de turno.', B:'Detener el acarreo hasta confirmar la señalización y el bloqueo del área.', C:'Cargar parcialmente mientras se completa la señalización.' },
+  2:{ A:'Continuar la maniobra de izaje confiando en la experiencia del operador.', B:'Detener la maniobra y verificar nuevamente los puntos de anclaje.', C:'Terminar rápido la maniobra para no atrasar el turno.' },
+  3:{ A:'Reiniciar la actividad porque lo solicita superintendencia.', B:'Mantener la suspensión hasta cumplir las condiciones de reinicio.', C:'Reiniciar parcialmente mientras se evalúan las condiciones.' }
 };
 
 const INSIGHTS = {
-  1:{ A:'La mayoría priorizó recuperar el tiempo operacional aun con controles incompletos. La presión por cumplir puede desplazar decisiones preventivas y normalizar riesgos temporales.', B:'La mayoría priorizó asegurar completamente el área antes de continuar la maniobra. Esto refleja una cultura preventiva donde la intervención oportuna se mantiene incluso bajo presión operacional.', C:'La mayoría optó por una solución intermedia. Bajo presión, las operaciones tienden a negociar parcialmente el riesgo para evitar detener completamente la actividad.' },
-  2:{ A:'La mayoría confió en la experiencia del equipo para continuar. La costumbre y la confianza operacional pueden disminuir la percepción real del riesgo.', B:'La mayoría priorizó intervenir antes de continuar. La experiencia no reemplaza los controles ni la percepción activa del riesgo.', C:'La mayoría permitió continuar para no afectar la continuidad. Bajo rutinas conocidas, el riesgo puede normalizarse sin generar intervención inmediata.' },
-  3:{ A:'La mayoría priorizó continuar por el nivel jerárquico de la solicitud. La presión operacional y la autoridad pueden influir en el cumplimiento de controles preventivos.', B:'La mayoría mantuvo el estándar preventivo antes de iniciar la maniobra. Los procedimientos se sostienen incluso bajo presión operacional o solicitudes jerárquicas.', C:'La mayoría avanzó parcialmente para mantener la continuidad. Bajo presión jerárquica, las operaciones tienden a flexibilizar temporalmente los estándares preventivos.' }
+  1:{ A:'La mayoría priorizó recuperar el tiempo de turno aun con la señalización incompleta. La presión por cumplir puede desplazar decisiones preventivas.', B:'La mayoría priorizó confirmar la señalización antes de continuar el acarreo. Esto refleja una cultura preventiva que se mantiene incluso bajo presión de turno.', C:'La mayoría optó por una solución intermedia. Bajo presión, las operaciones tienden a negociar parcialmente el riesgo para no detener completamente la actividad.' },
+  2:{ A:'La mayoría confió en la experiencia del operador para continuar. La costumbre puede disminuir la percepción real del riesgo en maniobras de izaje.', B:'La mayoría priorizó verificar los anclajes antes de continuar. La experiencia no reemplaza la verificación activa de los controles críticos.', C:'La mayoría permitió terminar rápido para no afectar el turno. Bajo rutinas conocidas, el riesgo puede normalizarse sin generar una verificación adicional.' },
+  3:{ A:'La mayoría priorizó reiniciar por el nivel jerárquico de la solicitud. La autoridad puede influir en el cumplimiento de los protocolos de reinicio.', B:'La mayoría mantuvo la suspensión hasta cumplir las condiciones. El protocolo se sostiene incluso ante solicitudes jerárquicas.', C:'La mayoría reinició parcialmente para mantener la continuidad. Bajo presión jerárquica, las operaciones tienden a flexibilizar temporalmente los estándares.' }
 };
 
 const FACTORES = {
-  1:['⚡ Presión operacional','⚖️ Continuidad vs prevención','🧠 Toma de decisiones'],
-  2:['⚠️ Exceso de confianza','👁️ Normalización del riesgo','🔥 Línea de fuego'],
-  3:['👤 Autoridad operacional','🤝 Presión del cliente','🛡️ Liderazgo preventivo']
+  1:['⚡ Presión de turno','⚖️ Continuidad vs prevención','🧠 Toma de decisiones'],
+  2:['⚠️ Exceso de confianza','👁️ Normalización del riesgo','🪝 Puntos de anclaje'],
+  3:['👤 Autoridad operacional','🌩️ Condiciones de reinicio','🛡️ Liderazgo preventivo']
 };
 
-const OPTION_COLORS = { A:"#C8102E", B:"#1e3a8a", C:"#f97316" };
+const OPTION_COLORS = { A:"#2B4585", B:"#90BF3E", C:"#6F6E6E" };
 
 function parseCSV(text) {
   const rows = [];
@@ -327,7 +338,7 @@ function renderDonut(id, vA, vB, vC, total) {
       labels: ['A','B','C'],
       datasets:[{
         data: hasData ? [vA,vB,vC] : [1,1,1],
-        backgroundColor: hasData ? ['#C8102E','#1e3a8a','#f97316'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
+        backgroundColor: hasData ? ['#2B4585','#90BF3E','#6F6E6E'] : ['#e2e8f0','#e2e8f0','#e2e8f0'],
         borderWidth: 0, hoverOffset: 4
       }]
     },
@@ -363,7 +374,9 @@ function renderScenarios(scenData) {
     card.className = 'sc-card';
     card.innerHTML = `
       <div class="sc-img-area">
-        <img src="${SCENARIO_IMAGES[idx]}" alt="Escenario ${idx}" onerror="this.style.display='none'"/>
+        ${SCENARIO_IMAGES[idx]
+          ? `<img src="${SCENARIO_IMAGES[idx]}" alt="Escenario ${idx}" onerror="this.style.display='none'"/>`
+          : `<div class="sc-img-placeholder">📷 Imagen pendiente</div>`}
       </div>
       <div class="sc-body">
         ${hasData ? `
@@ -377,18 +390,18 @@ function renderScenarios(scenData) {
           </div>
           <div class="legend">
             <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#C8102E"></span>A</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vA)}%;background:#C8102E"></div></div>
+              <div class="leg-left"><span class="leg-sq" style="background:#2B4585"></span>A</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vA)}%;background:#2B4585"></div></div>
               <span class="leg-pct">${pct(vA)}%</span>
             </div>
             <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#1e3a8a"></span>B</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vB)}%;background:#1e3a8a"></div></div>
+              <div class="leg-left"><span class="leg-sq" style="background:#90BF3E"></span>B</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vB)}%;background:#90BF3E"></div></div>
               <span class="leg-pct">${pct(vB)}%</span>
             </div>
             <div class="leg-row">
-              <div class="leg-left"><span class="leg-sq" style="background:#f97316"></span>C</div>
-              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#f97316"></div></div>
+              <div class="leg-left"><span class="leg-sq" style="background:#6F6E6E"></span>C</div>
+              <div class="leg-bar-wrap"><div class="leg-bar" style="width:${pct(vC)}%;background:#6F6E6E"></div></div>
               <span class="leg-pct">${pct(vC)}%</span>
             </div>
           </div>
@@ -435,32 +448,32 @@ function renderScenarios(scenData) {
       <div class="kpi-card">
         <div class="kpi-icon">🛡️</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--blue)">${cultPct}%</div>
-          <div class="kpi-name" style="color:var(--blue)">CULTURA PREVENTIVA</div>
+          <div class="kpi-pct" style="color:var(--green)">${cultPct}%</div>
+          <div class="kpi-name" style="color:var(--green)">CULTURA PREVENTIVA</div>
           <div class="kpi-desc">Decisiones que priorizaron detener y asegurar</div>
         </div>
       </div>
       <div class="kpi-card">
         <div class="kpi-icon">⚡</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--red)">${presPct}%</div>
-          <div class="kpi-name" style="color:var(--red)">PRESIÓN OPERACIONAL</div>
+          <div class="kpi-pct" style="color:var(--blue)">${presPct}%</div>
+          <div class="kpi-name" style="color:var(--blue)">PRESIÓN OPERACIONAL</div>
           <div class="kpi-desc">Cedieron ante presión de supervisor o tiempo</div>
         </div>
       </div>
       <div class="kpi-card">
         <div class="kpi-icon">👁️</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:#f97316">${normPct}%</div>
-          <div class="kpi-name" style="color:#f97316">NORMALIZACIÓN DEL RIESGO</div>
+          <div class="kpi-pct" style="color:#6F6E6E">${normPct}%</div>
+          <div class="kpi-name" style="color:#6F6E6E">NORMALIZACIÓN DEL RIESGO</div>
           <div class="kpi-desc">Continuaron con personal expuesto bajo carga suspendida</div>
         </div>
       </div>
       <div class="kpi-card">
         <div class="kpi-icon">⚖️</div>
         <div class="kpi-right">
-          <div class="kpi-pct" style="color:var(--blue)">${critPct}%</div>
-          <div class="kpi-name" style="color:var(--blue)">CRITERIO BAJO JERARQUÍA</div>
+          <div class="kpi-pct" style="color:var(--green)">${critPct}%</div>
+          <div class="kpi-name" style="color:var(--green)">CRITERIO BAJO JERARQUÍA</div>
           <div class="kpi-desc">Sostuvieron el protocolo ante presión del cliente</div>
         </div>
       </div>`;
